@@ -57,36 +57,42 @@
 
           {/* Hero (no duplicate summary; calmer spacing) */}
           {/* HERO */}
+{/* HERO (title + summary on the left, headshot + latest on the right) */}
 <Section className="pt-20 pb-8">
   <div className="grid lg:grid-cols-12 gap-12 items-start">
-    {/* Left: title + chips */}
-    <div className="lg:col-span-7">
-      <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.15] mb-4">
+    {/* LEFT: title + summary + chips (all in one column) */}
+    <div className="lg:col-span-7 flex flex-col gap-6">
+      <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.15]">
         Wafer-scale photonics and nanofabrication
       </h1>
 
-      {/* chips (optional) */}
-      <div className="flex flex-wrap gap-2 mt-6">
+      {/* Summary lives in the hero now */}
+      <div className="card p-8">
+        <h2 className="sr-only">Summary</h2>
+        <p className="text-slate-700 text-[1.05rem] leading-8">
+          Nanotechnology Engineering student focused on photonic-fluidic devices and cleanroom nanofabrication.
+          Experience across wafer design and process execution (MLA lithography, RIE, PVD/CVD), optical and heat-transfer
+          modeling, and translating research into patents and papers.
+        </p>
+      </div>
+
+      {/* (optional) chips */}
+      <div className="flex flex-wrap gap-2">
         {['Photonic-fluidic devices','Nanofab & metrology','Optics & heat transfer','IP & papers'].map((t)=>(
           <span key={t} className="text-sm px-3 py-1 rounded-full border border-slate-200 bg-slate-50 text-slate-700">{t}</span>
         ))}
       </div>
     </div>
 
-    {/* Right: headshot + latest card */}
+    {/* RIGHT: headshot + latest */}
     <aside className="lg:col-span-5 space-y-6">
-      {/* Headshot — comment out this figure to hide the photo */}
       <figure>
         <div className="w-full aspect-[4/5] overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
-          <img
-            src="images/headshot.jpg"
-            alt="Alden Panicker"
-            className="w-full h-full object-cover [object-position:50%_30%]"
-          />
+          <img src="images/headshot.jpg" alt="Alden Panicker"
+               className="w-full h-full object-cover [object-position:50%_30%]" />
         </div>
       </figure>
 
-      {/* Latest card (optional) */}
       <div className="card p-6 space-y-4">
         <div className="flex items-center justify-between">
           <span className="text-slate-600">Latest</span>
@@ -104,7 +110,8 @@
 </Section>
 
 
-          {/* Summary (single, aesthetic) */}
+
+          {/* 
           <Section id="summary" className="py-12">
             <div className="grid lg:grid-cols-12 gap-12 items-start">
               <div className="lg:col-span-7">
@@ -124,7 +131,7 @@
               </div>
             </div>
           </Section>
-
+   Summary (single, aesthetic) */}
           {/* Projects */}
           <Section id="projects" className="py-14">
             <h2 className="text-2xl font-bold mb-6 relative pl-4 before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-6 before:w-1 before:rounded before:bg-blue-500">Flagship Project — Dynamic view-angle-controlled optical display/encryption</h2>
