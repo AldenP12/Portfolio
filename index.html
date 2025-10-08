@@ -23,6 +23,10 @@
     const IMG_LAB_BENCH = "images/lab-bench.png";
     const IMG_GROUP = "images/lab-group.png";
     const IMG_VIALS = "images/qnc-vials.jpg";
+    
+    const LOGO_HARVARD = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Harvard_University_logo.svg/600px-Harvard_University_logo.svg.png"; // Harvard wordmark
+    const LOGO_WATERLOO = "https://upload.wikimedia.org/wikipedia/commons/b/b9/University_of_Waterloo_logo.png"; // Waterloo wordmark
+
 
     function Section({ id, title, children, className = "" }){
       return (
@@ -40,12 +44,20 @@
           <header className="sticky top-0 z-40 backdrop-blur bg-white/70 border-b border-slate-200">
             <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-indigo-50 border border-slate-200 grid place-items-center font-extrabold text-indigo-900 shadow-sm">AP</div>
-                <div>
-                  <div className="font-extrabold leading-tight">Alden Panicker</div>
-                  <div className="text-sm text-slate-600">Nanotechnology Engineering — Portfolio</div>
-                </div>
-              </div>
+  <div className="w-12 h-12 rounded-xl bg-indigo-50 border border-slate-200 grid place-items-center font-extrabold text-indigo-900 shadow-sm">AP</div>
+
+  {/* University wordmarks (hide on small screens to avoid crowding) */}
+  <div className="hidden md:flex items-center gap-2">
+    <img src={LOGO_HARVARD} alt="Harvard University" className="h-5 w-auto" />
+    <img src={LOGO_WATERLOO} alt="University of Waterloo" className="h-5 w-auto" />
+  </div>
+
+  <div>
+    <div className="font-extrabold leading-tight">Alden Panicker</div>
+    <div className="text-sm text-slate-600">Nanotechnology Engineering — Portfolio</div>
+  </div>
+</div>
+
               <nav className="hidden sm:flex items-center gap-3">
                 <a href="#summary" className="px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100">Summary</a>
                 <a href="#projects" className="px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100">Projects</a>
@@ -75,6 +87,15 @@
           modeling, and translating research into patents and papers.
         </p>
       </div>
+{/* Education badge */}
+<div className="card p-4 flex items-center gap-4">
+  <span className="text-2xl" aria-hidden="true">🎓</span>
+  <div className="flex-1">
+    <div className="font-semibold">Honours Nanotechnology Engineering</div>
+    <div className="text-sm text-slate-600">University of Waterloo</div>
+  </div>
+  <img src={LOGO_WATERLOO} alt="University of Waterloo" className="h-8 md:h-10 w-auto" />
+</div>
 
       {/* (optional) chips */}
       <div className="flex flex-wrap gap-2">
@@ -98,7 +119,11 @@
           <span className="text-slate-600">Latest</span>
           <span className="text-xs px-2 py-1 rounded-full border border-slate-200 bg-slate-50">Research</span>
         </div>
-        <div className="font-semibold">Harvard SEAS — Aizenberg Lab</div>
+        <div className="font-semibold flex items-center gap-2">
+  <img src={LOGO_HARVARD} alt="Harvard University" className="h-5 w-auto" />
+  <span>Harvard SEAS — Aizenberg Lab</span>
+</div>
+
         <ul className="space-y-2 text-slate-700 list-disc pl-5">
           <li>Lead author on view-angle-controlled optical display/encryption; patent filed; paper in preparation.</li>
           <li>Designed and fabricated micro-/nano-structured optics; tuned visible–IR transparency with thin films and nanoparticles.</li>
@@ -231,8 +256,9 @@
           <footer id="contact" className="border-t border-slate-200 bg-white/60">
             <div className="max-w-6xl mx-auto px-6 py-12">
               <h2 className="text-2xl font-bold mb-4">Contact</h2>
-              <a className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100"
-                 href="mailto:aa2panic@uwaterloo.ca">Email me</a>
+              <a className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-blue-600 hover:text-blue-700"
+   href="mailto:aa2panic@uwaterloo.ca">Email me</a>
+
               <div className="text-sm text-slate-600 mt-4">© {new Date().getFullYear()} Alden Panicker</div>
             </div>
           </footer>
