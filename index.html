@@ -56,20 +56,53 @@
           </header>
 
           {/* Hero (no duplicate summary; calmer spacing) */}
-          <Section className="pt-20 pb-8">
-            <div className="grid lg:grid-cols-12 gap-12 items-start">
-              <div className="lg:col-span-9">
-                <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.15] mb-4">
-                  From cleanroom to publication: wafer‑scale optics
-                </h1>
-                <div className="flex flex-wrap gap-2 mt-6">
-                  {['Photonic‑fluidic devices','Nanofab & metrology','Optics & heat transfer','IP & papers'].map((t)=>(
-                    <span key={t} className="text-sm px-3 py-1 rounded-full border border-slate-200 bg-slate-50 text-slate-700">{t}</span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </Section>
+          {/* HERO */}
+<Section className="pt-20 pb-8">
+  <div className="grid lg:grid-cols-12 gap-12 items-start">
+    {/* Left: title + chips */}
+    <div className="lg:col-span-7">
+      <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.15] mb-4">
+        Wafer-scale photonics and nanofabrication
+      </h1>
+
+      {/* chips (optional) */}
+      <div className="flex flex-wrap gap-2 mt-6">
+        {['Photonic-fluidic devices','Nanofab & metrology','Optics & heat transfer','IP & papers'].map((t)=>(
+          <span key={t} className="text-sm px-3 py-1 rounded-full border border-slate-200 bg-slate-50 text-slate-700">{t}</span>
+        ))}
+      </div>
+    </div>
+
+    {/* Right: headshot + latest card */}
+    <aside className="lg:col-span-5 space-y-6">
+      {/* Headshot — comment out this figure to hide the photo */}
+      <figure>
+        <div className="w-full aspect-[4/5] overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
+          <img
+            src="images/headshot.jpg"
+            alt="Alden Panicker"
+            className="w-full h-full object-cover [object-position:50%_30%]"
+          />
+        </div>
+      </figure>
+
+      {/* Latest card (optional) */}
+      <div className="card p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <span className="text-slate-600">Latest</span>
+          <span className="text-xs px-2 py-1 rounded-full border border-slate-200 bg-slate-50">Research</span>
+        </div>
+        <div className="font-semibold">Harvard SEAS — Aizenberg Lab</div>
+        <ul className="space-y-2 text-slate-700 list-disc pl-5">
+          <li>Lead author on view-angle-controlled optical display/encryption; patent filed; paper in preparation.</li>
+          <li>Designed and fabricated micro-/nano-structured optics; tuned visible–IR transparency with thin films and nanoparticles.</li>
+          <li>Quantified radiative cooling and specularity control; executed end-to-end cleanroom flows.</li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+</Section>
+
 
           {/* Summary (single, aesthetic) */}
           <Section id="summary" className="py-12">
