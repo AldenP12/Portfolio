@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Alden Panicker — Portfolio</title>
+  <meta name="description" content="Alden Panicker — photonics & nanofabrication portfolio." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root { --ring:#e2e8f0; }
+    .card { border:1px solid var(--ring); border-radius:16px; box-shadow:0 8px 24px rgba(2,6,23,.06); background:#fff; }
+  </style>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-b from-slate-50 to-white text-slate-900">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const IMG_BADGE = "images/badge.png";        // top-anchored crop
+    const IMG_CAR = "images/car.png";
+    const IMG_LAB_BENCH = "images/lab-bench.png";
+    const IMG_GROUP = "images/lab-group.png";
+    const IMG_VIALS = "images/qnc-vials.jpg";
+
+    function Section({ id, title, children, className = "" }){
+      return (
+        <section id={id} className={"max-w-6xl mx-auto px-6 " + className}>
+          {title && <h2 className="text-2xl font-bold mb-6">{title}</h2>}
+          {children}
+        </section>
+      );
+    }
+
+    function Portfolio(){
+      return (
+        <div className="min-h-screen">
+          {/* Nav */}
+          <header className="sticky top-0 z-40 backdrop-blur bg-white/70 border-b border-slate-200">
+            <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-indigo-50 border border-slate-200 grid place-items-center font-extrabold text-indigo-900 shadow-sm">AP</div>
+                <div>
+                  <div className="font-extrabold leading-tight">Alden Panicker</div>
+                  <div className="text-sm text-slate-600">Nanotechnology Engineering — Portfolio</div>
+                </div>
+              </div>
+              <nav className="hidden sm:flex items-center gap-3">
+                <a href="#summary" className="px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100">Summary</a>
+                <a href="#projects" className="px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100">Projects</a>
+                <a href="#experience" className="px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100">Experience</a>
+                <a href="#contact" className="px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100">Contact</a>
+              </nav>
+            </div>
+          </header>
+
+          {/* Hero (no duplicate summary; calmer spacing) */}
+          <Section className="pt-20 pb-8">
+            <div className="grid lg:grid-cols-12 gap-12 items-start">
+              <div className="lg:col-span-9">
+                <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.15] mb-4">
+                  From cleanroom to publication: wafer‑scale optics you can publish and patent
+                </h1>
+                <div className="flex flex-wrap gap-2 mt-6">
+                  {['Photonic‑fluidic devices','Nanofab & metrology','Optics & heat transfer','IP & papers'].map((t)=>(
+                    <span key={t} className="text-sm px-3 py-1 rounded-full border border-slate-200 bg-slate-50 text-slate-700">{t}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </Section>
+
+          {/* Summary (single, aesthetic) */}
+          <Section id="summary" className="py-12">
+            <div className="grid lg:grid-cols-12 gap-12 items-start">
+              <div className="lg:col-span-7">
+                <div className="card p-8">
+                  <h2 className="text-2xl font-bold mb-3">Summary</h2>
+                  <p className="text-slate-700 text-[1.05rem] leading-8">
+                    Nanotechnology Engineering student focused on photonic‑fluidic devices and cleanroom nanofabrication.
+                    Experience across wafer design and process execution (MLA lithography, RIE, PVD/CVD), optical and heat‑transfer modeling,
+                    and translating research into patents and papers.
+                  </p>
+                </div>
+              </div>
+              <div className="lg:col-span-5">
+                <blockquote className="rounded-2xl border border-slate-200 bg-slate-50 p-6 text-slate-700 leading-7">
+                  “Transforming novel photonic‑fluidic technologies into patented IP and peer‑reviewed publications.”
+                </blockquote>
+              </div>
+            </div>
+          </Section>
+
+          {/* Projects */}
+          <Section id="projects" className="py-14">
+            <h2 className="text-2xl font-bold mb-6">Flagship Project — View‑angle‑controlled optical display/encryption</h2>
+            <div className="grid lg:grid-cols-2 gap-10">
+              <figure className="card p-4">
+                <div className="w-full aspect-[4/3] overflow-hidden rounded-xl border border-slate-200">
+                  {/* Top‑anchored crop so the upper design stays in frame */}
+                  <img src={IMG_BADGE} alt="ID‑badge concept demonstrating selective visibility for encrypted information"
+                       className="w-full h-full object-cover" style={{objectPosition:'50% 0%'}} />
+                </div>
+                <figcaption className="text-sm text-slate-700 mt-3">
+                  Application concept: ID‑badge form factor demonstrating selective visibility for encrypted information.
+                </figcaption>
+              </figure>
+
+              <figure className="card p-4">
+                <div className="w-full aspect-[4/3] overflow-hidden rounded-xl border border-slate-200">
+                  <img src={IMG_CAR} alt="Automotive passenger‑side display concept showing controlled visibility"
+                       className="w-full h-full object-cover" />
+                </div>
+                <figcaption className="text-sm text-slate-700 mt-3">Automotive passenger‑side display with controlled visibility.</figcaption>
+              </figure>
+            </div>
+
+            <div className="card p-6 mt-8">
+              <ul className="space-y-2 text-slate-800 list-disc pl-5">
+                <li><strong>Role:</strong> Lead author & inventor (co‑lead with collaborator Raphael Kay).</li>
+                <li><strong>Focus:</strong> I develop wafer‑scale nanofabrication on silicon, design and characterize optical behavior, and tune performance with thin‑film deposition—all within robust, end‑to‑end cleanroom processes.</li>
+                <li><strong>Outcomes:</strong> Patent filed; paper in preparation.</li>
+              </ul>
+            </div>
+          </Section>
+
+          {/* Experience with aligned photos underneath specific cards */}
+          <Section id="experience" className="py-14">
+            <h2 className="text-2xl font-bold mb-6">Experience</h2>
+            <div className="grid lg:grid-cols-3 gap-10">
+              {/* Card 1 */}
+              <div className="card p-6">
+                <h3 className="font-semibold">Harvard SEAS — Permanent Part‑Time Researcher</h3>
+                <p className="text-sm text-slate-600">May 2025 – Present</p>
+                <ul className="space-y-2 text-slate-800 list-disc pl-5 mt-3">
+                  <li>Transforming photonic‑fluidic technologies into patented IP and peer‑reviewed publications.</li>
+                  <li>Patent application in preparation; claims drafted; prior‑art reviewed with counsel.</li>
+                  <li>Lead author on next‑generation optical display/encryption with dynamic view‑angle control.</li>
+                  <li>Co‑author on additional papers across nanomaterial and photonic‑fluidic devices.</li>
+                </ul>
+                {/* Aligned photo under this card */}
+                <figure className="mt-4">
+                  <div className="w-full aspect-[3/2] overflow-hidden rounded-xl border border-slate-200">
+                    <img src={IMG_LAB_BENCH} alt="Prototype evaluation in the lab by two researchers wearing safety glasses"
+                         className="w-full h-full object-cover" />
+                  </div>
+                  <figcaption className="text-sm text-slate-700 mt-2">Prototype evaluation in the lab.</figcaption>
+                </figure>
+              </div>
+
+              {/* Card 2 */}
+              <div className="card p-6">
+                <h3 className="font-semibold">Harvard SEAS — Aizenberg Lab (Co‑op)</h3>
+                <p className="text-sm text-slate-600">Sep 2024 – May 2025</p>
+                <ul className="space-y-2 text-slate-800 list-disc pl-5 mt-3">
+                  <li>Wafer design (KLayout) and end‑to‑end cleanroom processes: MLA lithography, RIE, PVD/CVD.</li>
+                  <li>Tuned visible–IR transparency with nanoparticles and thin films; UV‑Vis/FTIR characterization.</li>
+                  <li>Quantified radiative cooling and specularity control; opto‑thermal experiments and modeling.</li>
+                </ul>
+                {/* Aligned photo under this card */}
+                <figure className="mt-4">
+                  <div className="w-full aspect-[3/2] overflow-hidden rounded-xl border border-slate-200">
+                    {/* Top‑anchored crop so faces remain visible */}
+                    <img src={IMG_GROUP} alt="Aizenberg Lab" className="w-full h-full object-cover" style={{objectPosition:'50% 0%'}} />
+                  </div>
+                  <figcaption className="text-sm text-slate-700 mt-2">Aizenberg Lab</figcaption>
+                </figure>
+              </div>
+
+              {/* Card 3 */}
+              <div className="card p-6">
+                <h3 className="font-semibold">Quantum Nano Center — University of Waterloo</h3>
+                <ul className="space-y-2 text-slate-800 list-disc pl-5 mt-3">
+                  <li>MOSFET/IC fabrication and testing; four‑point probe; I–V & C–V; threshold and mobility extraction.</li>
+                  <li>Quantum dots & QDLEDs: optical/electrical validation; emission peak & stability; band‑gap and particle‑size extraction.</li>
+                  <li>Polymer & nanomaterials characterization (tensile, impact, DSC, TGA); SEM on nanogold wires; CNT Raman/UV‑vis.</li>
+                </ul>
+                {/* Aligned photo under this card */}
+                <figure className="mt-4">
+                  <div className="w-full aspect-[3/2] overflow-hidden rounded-xl border border-slate-200">
+                    <img src={IMG_VIALS} alt="Quantum dot synthesis vials under UV showing tunable emission colors"
+                         className="w-full h-full object-cover" />
+                  </div>
+                  <figcaption className="text-sm text-slate-700 mt-2">Quantum dots — tunable emission.</figcaption>
+                </figure>
+              </div>
+            </div>
+          </Section>
+
+          {/* Contact */}
+          <footer id="contact" className="border-t border-slate-200 bg-white/60">
+            <div className="max-w-6xl mx-auto px-6 py-12">
+              <h2 className="text-2xl font-bold mb-4">Contact</h2>
+              <a className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100"
+                 href="mailto:aa2panic@uwaterloo.ca">Email me</a>
+              <div className="text-sm text-slate-600 mt-4">© {new Date().getFullYear()} Alden Panicker</div>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<Portfolio />);
+  </script>
+</body>
+</html>
