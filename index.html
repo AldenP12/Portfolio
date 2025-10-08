@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Alden Panicker — Portfolio</title>
+  <meta name="description" content="Portfolio of Alden Panicker — nanotechnology engineering, photonics/nanofabrication, and research projects." />
+  <meta property="og:title" content="Alden Panicker — Portfolio" />
+  <meta property="og:description" content="Nanofab, photonics, optics & heat-transfer research. Résumé, projects, and contact." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0c10; --bg2:#0d0f14; --card:#11131a; --text:#f1f5f9; --muted:#a8b0bb;
+      --ring:#232837; --pill:#161a24; --accent:#7dd3fc; --accent-2:#60a5fa;
+      --ok:#34d399; --warn:#fbbf24;
+    }
+    .light:root{
+      --bg:#fafafa; --bg2:#ffffff; --card:#ffffff; --text:#111827; --muted:#6b7280;
+      --ring:#e5e7eb; --pill:#f3f4f6; --accent:#2563eb; --accent-2:#0ea5e9;
+      --ok:#059669; --warn:#d97706;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--text)}
+    a{color:var(--accent);text-decoration:none}
+    .container{max-width:1000px;margin:0 auto;padding:28px}
+    .nav{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .btn{display:inline-flex;gap:8px;align-items:center;background:var(--pill);border:1px solid var(--ring);padding:10px 14px;border-radius:12px}
+    .btn:hover{filter:brightness(1.08)}
+    .hero{display:grid;grid-template-columns:1fr;gap:22px;padding:38px 0 8px}
+    @media (min-width:900px){ .hero{grid-template-columns:1.2fr .8fr} }
+    .title{font-size:42px;line-height:1.05;margin:0 0 10px;font-weight:800}
+    .subtitle{color:var(--muted);max-width:65ch}
+    .card{background:linear-gradient(180deg,var(--card),var(--bg2));border:1px solid var(--ring);border-radius:16px;padding:20px}
+    .grid{display:grid;gap:18px}
+    @media (min-width:900px){ .grid{grid-template-columns:1fr 1fr} }
+    .list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:var(--pill);border:1px solid var(--ring);color:var(--muted);font-size:12px}
+    .section-title{font-size:22px;margin:30px 0 12px}
+    .kicker{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+    .footer{padding:24px 0;color:var(--muted);font-size:14px;text-align:center}
+    .avatar{width:88px;height:88px;border-radius:14px;background:#141820;border:1px solid var(--ring);display:flex;align-items:center;justify-content:center;font-weight:800}
+    .two-col{display:grid;gap:14px}
+    @media (min-width:800px){ .two-col{grid-template-columns:1fr 1fr} }
+    .project h3{margin:0 0 6px}
+    .muted{color:var(--muted)}
+    .tagrow{display:flex;gap:8px;flex-wrap:wrap}
+    .icon{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}
+    .ok{background:var(--ok)} .warn{background:var(--warn)}
+    .toc{display:flex;gap:10px;flex-wrap:wrap}
+    .toc a{font-size:14px;color:var(--muted)}
+    .toc a:hover{color:var(--accent)}
+    .spacer{height:8px}
+  </style>
+  <script>
+    function toggleTheme(){ document.documentElement.classList.toggle('light') }
+    function smoothTo(id){ document.querySelector(id)?.scrollIntoView({behavior:'smooth'}) }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <nav class="nav">
+      <div class="row">
+        <div class="avatar">AP</div>
+        <div>
+          <strong style="font-size:18px">Alden Panicker</strong><br>
+          <span class="muted">Nanotechnology Engineering — Portfolio</span>
+        </div>
+      </div>
+      <div class="row">
+        <a class="btn" href="mailto:aa2panic@uwaterloo.ca">Email</a>
+        <a class="btn" href="#projects" onclick="smoothTo('#projects')">Projects</a>
+        <a class="btn" href="resume.pdf" download>Résumé (PDF)</a>
+        <button class="btn" onclick="toggleTheme()">Toggle theme</button>
+      </div>
+    </nav>
+
+    <div class="spacer"></div>
+    <div class="toc">
+      <a href="#about" onclick="smoothTo('#about')">About</a>
+      <a href="#experience" onclick="smoothTo('#experience')">Experience</a>
+      <a href="#projects" onclick="smoothTo('#projects')">Projects</a>
+      <a href="#skills" onclick="smoothTo('#skills')">Skills</a>
+      <a href="#contact" onclick="smoothTo('#contact')">Contact</a>
+    </div>
+
+    <section id="about" class="hero">
+      <div>
+        <h1 class="title">Building photonic & nanofabrication ideas into IP and papers</h1>
+        <p class="subtitle">
+          Nanotechnology Engineering student with hands-on wafer process experience (lithography, RIE, PVD/CVD),
+          optics & heat-transfer modeling, and a track record of turning research concepts into patentable and publishable results.
+        </p>
+        <div class="row">
+          <span class="pill">Photonic-fluidic devices</span>
+          <span class="pill">Nanofab & cleanroom</span>
+          <span class="pill">Optics & heat transfer</span>
+          <span class="pill">IP & publications</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="kicker">Quick facts</div>
+        <ul class="list">
+          <li><span class="icon ok"></span><strong>Current:</strong> Researcher, Harvard SEAS (Aizenberg Lab) — patent in preparation; lead author on optical display/encryption with view-angle control.</li>
+          <li><span class="icon ok"></span><strong>Recent:</strong> Visiting Researcher (Co-op), Harvard SEAS — designed/fabricated micro-structured optics; tuned visible–IR transparency; quantified radiative cooling.</li>
+          <li><span class="icon ok"></span><strong>Selected skills:</strong> Lithography (MLA), RIE, PVD/CVD, ellipsometry, profilometry, PDMS soft litho; MATLAB modeling.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="experience">
+      <h2 class="section-title">Experience</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Harvard SEAS — Permanent Part-Time Researcher</h3>
+          <p class="muted">May 2025 – Present</p>
+          <ul class="list">
+            <li>Transforming photonic-fluidic technologies into patentable IP and peer-reviewed publications.</li>
+            <li>Lead author on view-angle-controlled display/encryption concepts.</li>
+            <li>Co-author on photonic & nanomaterial device papers.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Harvard SEAS — Aizenberg Lab (Co-op)</h3>
+          <p class="muted">Sep 2024 – May 2025</p>
+          <ul class="list">
+            <li>End-to-end cleanroom flows: MLA lithography, RIE, PVD/CVD; thin-film & nanoparticle tuning of optics.</li>
+            <li>UV-Vis/FTIR characterization; radiative-cooling experiments; specularity control.</li>
+            <li>Wafer design (KLayout); metrology: ellipsometry/profilometry.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Quantum Nano Center — University of Waterloo</h3>
+          <ul class="list">
+            <li>MOSFET/IC fab & testing (I–V, C–V); threshold extraction & mobility analysis; authored technical reports.</li>
+            <li>Quantum dots & QDLEDs; optical/electrical validation; bandgap & particle-size extraction.</li>
+            <li>Polymer/mech/thermal characterization (DSC, TGA); CNT Raman/UV-vis; SEM on nanogold wires.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <h2 class="section-title">Projects</h2>
+      <div class="grid">
+        <div class="card project">
+          <h3>Dynamic optical display / encryption</h3>
+          <p class="muted">Lead author — in progress</p>
+          <p>Developing view-angle-controlled display/encryption with photonic micro-structures; manuscript in preparation.</p>
+          <div class="tagrow">
+            <span class="pill">Micro-optics</span><span class="pill">Security</span><span class="pill">Wafer-scale</span>
+          </div>
+        </div>
+        <div class="card project">
+          <h3>Radiative cooling & specularity tuning</h3>
+          <p>Modeled and validated opto-thermal control for building-scale thermal management; MATLAB + lab experiments.</p>
+          <div class="tagrow">
+            <span class="pill">Heat transfer</span><span class="pill">FTIR</span><span class="pill">Thin films</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <h2 class="section-title">Skills</h2>
+      <div class="two-col">
+        <div class="card">
+          <h3>Fabrication & Metrology</h3>
+          <ul class="list">
+            <li>Lithography (MLA), RIE, PVD/CVD</li>
+            <li>Ellipsometry, profilometry, SEM</li>
+            <li>Soft lithography (PDMS), cleanroom workflows</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Modeling & Analysis</h3>
+          <ul class="list">
+            <li>Optics & heat-transfer modeling</li>
+            <li>MATLAB, Python (NumPy, SciPy)</li>
+            <li>Data acquisition & visualization</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2 class="section-title">Contact</h2>
+      <div class="card">
+        <p>Email: <a href="mailto:aa2panic@uwaterloo.ca">aa2panic@uwaterloo.ca</a> &nbsp;·&nbsp; Phone: 905-570-6376</p>
+        <p class="muted">Open to research collaborations and internships. Happy to share preprints on request.</p>
+      </div>
+    </section>
+
+    <div class="footer">© <span id="y"></span> Alden Panicker &nbsp;·&nbsp; <a href="resume.pdf">Résumé</a></div>
+  </div>
+  <script>document.getElementById('y').textContent=new Date().getFullYear()</script>
+</body>
+</html>
