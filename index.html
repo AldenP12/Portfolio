@@ -39,31 +39,184 @@
 
 
 
-    // -- Simple simulation template (replace with your math) --
-function simulateExample(N = 500) {
-  // Example: damped oscillator x'' + 0.15 x' + x = 0, Euler integrator
-  const dt = 0.02;
-  let x = 1, v = 0;               // initial conditions
-  const out = [];
-  for (let i = 0; i < N; i++) {
-    const a = -0.15*v - x;        // acceleration
-    v += a*dt;
-    x += v*dt;
-    out.push([i*dt, x]);
-  }
-  return out;                     // [[t0,x0], [t1,x1], ...]
+// ====== UTILITIES ======
+function linspace(a, b, n) {
+  const arr = []; if (n <= 1) return [a];
+  const step = (b - a) / (n - 1);
+  for (let i = 0; i < n; i++) arr.push(a + i * step);
+  return arr;
 }
-
-// Turn points into an SVG polyline string
-function toPolyline(points, w=500, h=220, pad=10) {
+function toPolyline(points, w=600, h=260, pad=10) {
   if (!points.length) return "";
   const xs = points.map(p=>p[0]), ys = points.map(p=>p[1]);
   const xmin = Math.min(...xs), xmax = Math.max(...xs);
   const ymin = Math.min(...ys), ymax = Math.max(...ys);
-  const sx = (x)=> pad + (w-2*pad) * (x - xmin)/(xmax - xmin || 1);
-  const sy = (y)=> h - pad - (h-2*pad) * (y - ymin)/(ymax - ymin || 1);
-  return points.map(([x,y])=>`${sx(x)},${sy(y)}`).join(" ");
+  const sx = x => pad + (w-2*pad) * ((x - xmin) / (xmax - xmin || 1));
+  const sy = y => h - pad - (h-2*pad) * ((y - ymin) / (ymax - ymin || 1));
+  return points.map(([x,y]) => `${sx(x)},${sy(y)}`).join(" ");
 }
+
+// ====== (A) DEPOSITION / ETCH RATE VISUALIZER ======
+function DepositionEtchCard() {
+  const [mode, setMode] = React.useState("dep");     // "dep" or "etch"
+  const [rate, setRate] = React.useState(50);        // nm/min
+  const [time, setTime] = React.useState(10);        // min
+  const [t0, setT0]   = React.useState(200);         // initial thickness nm
+
+  const sign = mode === "dep" ? 1 : -1;
+  const tFinal = Math.max(0, t0 + sign * rate * time);   // clamp >= 0
+  const maxScale = Math.max(t0, tFinal, 100);            // for bar scale
+
+  return (
+    <div className="card p-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-semibold">Deposition / Etch visualizer</h2>
+        <div className="flex gap-2">
+          <button
+            className={"px-3 py-1 rounded-lg border " + (mode==="dep" ? "border-blue-500 text-blue-600 bg-blue-50" : "border-slate-200 bg-slate-50")}
+            onClick={()=>setMode("dep")}
+          >Deposition</button>
+          <button
+            className={"px-3 py-1 rounded-lg border " + (mode==="etch" ? "border-blue-500 text-blue-600 bg-blue-50" : "border-slate-200 bg-slate-50")}
+            onClick={()=>setMode("etch")}
+          >Etch</button>
+        </div>
+      </div>
+
+      {/* Controls */}
+      <div className="grid sm:grid-cols-3 gap-4">
+        <label className="text-sm">
+          <div className="mb-1">Initial thickness t₀ (nm): <strong>{t0}</strong></div>
+          <input type="range" min="0" max="1000" value={t0}
+                 onChange={e=>setT0(+e.target.value)} className="w-full"/>
+        </label>
+        <label className="text-sm">
+          <div className="mb-1">Rate (nm/min): <strong>{rate}</strong></div>
+          <input type="range" min="0" max="200" value={rate}
+                 onChange={e=>setRate(+e.target.value)} className="w-full"/>
+        </label>
+        <label className="text-sm">
+          <div className="mb-1">Time (min): <strong>{time}</strong></div>
+          <input type="range" min="0" max="60" value={time}
+                 onChange={e=>setTime(+e.target.value)} className="w-full"/>
+        </label>
+      </div>
+
+      {/* Bars */}
+      <div className="grid sm:grid-cols-2 gap-6 mt-6">
+        <div>
+          <div className="text-sm text-slate-600 mb-2">Initial stack</div>
+          <div className="h-40 w-24 border rounded-lg overflow-hidden bg-slate-100 relative">
+            <div
+              className="absolute bottom-0 left-0 right-0 bg-blue-400"
+              style={{ height: `${(t0 / maxScale) * 100}%` }}
+            />
+          </div>
+          <div className="text-sm mt-2">t₀ = <strong>{t0.toFixed(0)}</strong> nm</div>
+        </div>
+        <div>
+          <div className="text-sm text-slate-600 mb-2">Final stack</div>
+          <div className="h-40 w-24 border rounded-lg overflow-hidden bg-slate-100 relative">
+            <div
+              className="absolute bottom-0 left-0 right-0 bg-blue-600"
+              style={{ height: `${(tFinal / maxScale) * 100}%` }}
+            />
+          </div>
+          <div className="text-sm mt-2">tᶠ = <strong>{tFinal.toFixed(0)}</strong> nm</div>
+        </div>
+      </div>
+
+      <p className="text-sm text-slate-600 mt-4">
+        Computation: tᶠ = max(0, t₀ ± rate × time). Use deposition (+) or etch (−) to see thickness change.
+      </p>
+    </div>
+  );
+}
+
+// ====== (B) THIN-FILM INTERFERENCE (single film on glass, normal incidence) ======
+// Model: n0 (air)=1, film n1, substrate n2 (real indices), normal incidence.
+// Reflectance R(λ) = |(r01 + r12 e^{2iβ}) / (1 + r01 r12 e^{2iβ})|^2
+// where r01=(n0-n1)/(n0+n1), r12=(n1-n2)/(n1+n2), β=2π n1 d / λ.
+function filmReflectanceSpectrum(n1=1.45, n2=1.5, d_nm=300) {
+  const n0 = 1.0;
+  const lambdas = linspace(380, 780, 200); // nm
+  const r01 = (n0 - n1) / (n0 + n1);
+  const r12 = (n1 - n2) / (n1 + n2);
+
+  const pts = lambdas.map(lambda => {
+    const beta = 2 * Math.PI * n1 * (d_nm / lambda);
+    // e^{2 i β}
+    const cos2b = Math.cos(2*beta), sin2b = Math.sin(2*beta);
+    // complex numerator: r01 + r12 * e^{2iβ}
+    const num_re = r01 + r12 * cos2b;
+    const num_im = 0     + r12 * sin2b;
+    // complex denominator: 1 + r01*r12 * e^{2iβ}
+    const rr = r01 * r12;
+    const den_re = 1 + rr * cos2b;
+    const den_im =     rr * sin2b;
+    // complex division |num/den|^2
+    const den2 = den_re*den_re + den_im*den_im;
+    const re = (num_re*den_re + num_im*den_im) / den2;
+    const im = (num_im*den_re - num_re*den_im) / den2;
+    const R = re*re + im*im;
+    return [lambda, R];
+  });
+  return pts;
+}
+
+function ThinFilmCard() {
+  const [n1, setN1] = React.useState(1.45);     // film refractive index
+  const [n2, setN2] = React.useState(1.50);     // substrate (glass)
+  const [d,  setD ] = React.useState(300);      // thickness (nm)
+
+  const data = filmReflectanceSpectrum(n1, n2, d);
+  const poly = toPolyline(data, 600, 260, 36);
+
+  return (
+    <div className="card p-6">
+      <h2 className="text-xl font-semibold mb-4">Thin-film interference (reflectance vs wavelength)</h2>
+
+      {/* Controls */}
+      <div className="grid sm:grid-cols-3 gap-4 mb-4">
+        <label className="text-sm">
+          <div className="mb-1">Film index n₁: <strong>{n1.toFixed(2)}</strong></div>
+          <input type="range" min="1.00" max="2.50" step="0.01" value={n1}
+                 onChange={e=>setN1(+e.target.value)} className="w-full"/>
+        </label>
+        <label className="text-sm">
+          <div className="mb-1">Substrate n₂ (glass≈1.50): <strong>{n2.toFixed(2)}</strong></div>
+          <input type="range" min="1.30" max="2.00" step="0.01" value={n2}
+                 onChange={e=>setN2(+e.target.value)} className="w-full"/>
+        </label>
+        <label className="text-sm">
+          <div className="mb-1">Thickness d (nm): <strong>{d}</strong></div>
+          <input type="range" min="0" max="1000" step="1" value={d}
+                 onChange={e=>setD(+e.target.value)} className="w-full"/>
+        </label>
+      </div>
+
+      {/* Plot (SVG) */}
+      <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+        <svg width="100%" height="280" viewBox="0 0 600 260" preserveAspectRatio="none">
+          <rect x="0" y="0" width="600" height="260" fill="white"/>
+          {/* axes */}
+          <line x1="36" y1="224" x2="580" y2="224" stroke="#cbd5e1"/>
+          <line x1="36" y1="24"  x2="36"  y2="224" stroke="#cbd5e1"/>
+          <text x="300" y="248" fontSize="10" fill="#64748b" textAnchor="middle">Wavelength (nm)</text>
+          <text x="10" y="18" transform="rotate(-90,10,18)" fontSize="10" fill="#64748b">Reflectance</text>
+
+          {/* curve */}
+          <polyline fill="none" stroke="#2563eb" strokeWidth="2" points={poly}/>
+        </svg>
+      </div>
+
+      <p className="text-sm text-slate-600 mt-3">
+        Model: normal incidence, single film between air (n₀=1) and substrate (n₂). Uses Fresnel coefficients with phase β = 2π n₁ d / λ.
+      </p>
+    </div>
+  );
+}
+
 
 
     
@@ -221,6 +374,13 @@ function toPolyline(points, w=500, h=220, pad=10) {
           </Section>
 
 
+{/* === INTERACTIVE SIMULATIONS === */}
+<Section id="simulations" className="py-12">
+  <div className="grid lg:grid-cols-2 gap-10">
+    <DepositionEtchCard />
+    <ThinFilmCard />
+  </div>
+</Section>
 
 
           {/* Simulation (click to run) 
