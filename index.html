@@ -47,8 +47,9 @@
     .reveal-in{ transition-delay: calc(var(--stagger, 0) * 60ms); }
 
     /* Title typewriter */
-    .typewrite{ display:inline-block; position:relative; white-space:nowrap; overflow:hidden; border-right:2px solid currentColor; animation: caretBlink 1s step-end infinite; }
-    .typewrite.done{ border-right-color:transparent; animation:none; }
+    .typewrite{ display:inline; position:relative; /* allow wrapping; no clipping */ border-right:2px solid transparent; }
+.typewrite.typing{ border-right-color: currentColor; animation: caretBlink 1s step-end infinite; }
+.typewrite.done{ border-right-color: transparent; animation: none; }
     @keyframes caretBlink{ 50% { border-color: transparent; } }
   </style>
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -331,7 +332,7 @@ function ThinFilmCard() {
     {/* RIGHT: headshot + latest */}
     <aside className="lg:col-span-5 space-y-6">
       <figure>
-        <div className="w-full aspect-[4/5] overflow-hidden rounded-2xl border border-slate-200 shadow-sm will-reveal">
+        <div className="w-full aspect-[4/5] overflow-hidden rounded-2xl border border-slate-200 shadow-sm will-reveal" data-reveal>
           <img src="images/headshot.jpg" alt="Alden Panicker"
                className="w-full h-full object-cover [object-position:50%_30%]" />
         </div>
@@ -578,7 +579,7 @@ function ThinFilmCard() {
 
       // 2) Scroll reveal — auto-mark typical elements if not explicitly flagged
       function setupReveal(){
-        const candidates = document.querySelectorAll('.card, .btn, h1, h2, [data-reveal]');
+        const candidates = document.querySelectorAll('.card, .btn, h1, h2, [data-reveal], .will-reveal');
         candidates.forEach(el=>{
           if (!el.classList.contains('reveal-in')) el.classList.add('will-reveal');
         });
@@ -617,7 +618,8 @@ function ThinFilmCard() {
           el.textContent=''; el.classList.add('typewrite');
           const start=()=>{
             if (prefersReduced){ el.textContent=full; el.classList.add('done'); return; }
-            let i=0; const tick=()=>{ i++; el.textContent = full.slice(0,i); if (i<full.length) setTimeout(tick, speed); else el.classList.add('done'); };
+            el.classList.add('typing');
+            let i=0; const tick=()=>{ i++; el.textContent = full.slice(0,i); if (i<full.length) setTimeout(tick, speed); else { el.classList.add('done'); el.classList.remove('typing'); } };
             setTimeout(tick, delay);
           };
           const io = new IntersectionObserver(entries=>{ entries.forEach(e=>{ if (e.isIntersecting){ start(); io.disconnect(); } });}, {threshold:0.2});
