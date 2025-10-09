@@ -62,10 +62,10 @@
   <script type="text/babel">
     const IMG_BADGE = "images/badge.png";        // top-anchored crop
     const IMG_CAR = "images/car.png";
-    const IMG_HEADSHOT = "images/headshot.jpg";
     const IMG_LAB_BENCH = "images/lab-bench.png";
     const IMG_GROUP = "images/lab-group.png";
     const IMG_VIALS = "images/qnc-vials.jpg";
+    const IMG_HEADSHOT = "images/headshot.jpg";
     
     const LOGO_HARVARD = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Harvard_University_logo.svg/600px-Harvard_University_logo.svg.png"; // Harvard wordmark
     const LOGO_WATERLOO = "https://upload.wikimedia.org/wikipedia/commons/b/b9/University_of_Waterloo_logo.png"; // Waterloo wordmark
@@ -333,8 +333,8 @@ function ThinFilmCard() {
     {/* RIGHT: headshot + latest */}
     <aside className="lg:col-span-5 space-y-6">
       <figure>
-        <div className="w-full aspect-[4/5] overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
-          <img src={IMG_HEADSHOT} alt="Alden Panicker"
+        <div className="w-full aspect-[4/5] overflow-hidden rounded-2xl border border-slate-200 shadow-sm will-reveal" data-reveal>
+          <img src="images/headshot.jpg" alt="Alden Panicker"
                className="w-full h-full object-cover [object-position:50%_30%]"
                onError={(e)=>{ e.currentTarget.onerror=null; e.currentTarget.src='https://via.placeholder.com/800x1000?text=Headshot'; }} />
         </div>
@@ -385,7 +385,7 @@ function ThinFilmCard() {
    Summary (single, aesthetic) */}
           {/* Projects */}
           <Section id="projects" className="py-14">
-            <h2 className="text-2xl font-bold mb-8 md:mb-10 relative pl-4 before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-6 before:w-1 before:rounded before:bg-blue-500 typewrite" data-typewrite data-type-speed="22">Flagship Project — Dynamic view-angle-controlled optical display/encryption</h2>
+            <h2 className="text-2xl font-bold mb-6 relative pl-4 before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-6 before:w-1 before:rounded before:bg-blue-500 typewrite" data-typewrite data-type-speed="22">Flagship Project — Dynamic view-angle-controlled optical display/encryption</h2>
             <div className="grid lg:grid-cols-2 gap-10" data-hover-grid>
               <figure className="card p-4" data-reveal>
                 <div className="w-full aspect-[4/3] overflow-hidden rounded-xl border border-slate-200">
@@ -464,7 +464,7 @@ function ThinFilmCard() {
           */}
           {/* Experience with aligned photos underneath specific cards */}
           <Section id="experience" className="py-14">
-  <h2 className="text-2xl font-bold mb-8 md:mb-10 typewrite" data-typewrite data-type-speed="22">Experience</h2>
+  <h2 className="text-2xl font-bold mb-6 typewrite" data-typewrite data-type-speed="22">Experience</h2>
 
   {/* Equal heights + bottom-aligned figures */}
   <div className="grid lg:grid-cols-3 gap-10 items-stretch" data-hover-grid>
@@ -527,8 +527,8 @@ function ThinFilmCard() {
           {/* Contact */}
           <footer id="contact" className="border-t border-slate-200 bg-white/60">
             <div className="max-w-6xl mx-auto px-6 py-12">
-              <h2 className="text-2xl font-bold mb-8 md:mb-10 typewrite" data-typewrite data-type-speed="22">Contact</h2>
-              <a className="btn inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-blue-600 hover:text-blue-700 mt-4"
+              <h2 className="text-2xl font-bold mb-6 typewrite" data-typewrite data-type-speed="22">Contact</h2>
+              <a className="btn inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-blue-600 hover:text-blue-700 mt-3"
    href="mailto:aa2panic@uwaterloo.ca">Email me</a>
 
               <div className="text-sm text-slate-600 mt-4">© {new Date().getFullYear()} Alden Panicker</div>
@@ -623,37 +623,14 @@ function ThinFilmCard() {
 
       // 3) Typewriter for headings with [data-typewrite]
       function setupTypewriter(){
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  document.querySelectorAll('[data-typewrite]').forEach(el=>{
-    const full=(el.getAttribute('data-type-text')||el.textContent||'').trim();
-    const speed=parseInt(el.getAttribute('data-type-speed')||'28',10);
-    const delay=parseInt(el.getAttribute('data-type-delay')||'150',10);
-    el.textContent='';
-    const start=()=>{
-      if(prefersReduced){ el.textContent=full; return; }
-      let i=0; const tick=()=>{ i++; el.textContent=full.slice(0,i); if(i<full.length) setTimeout(tick,speed); };
-      setTimeout(tick,delay);
-    };
-    const r=el.getBoundingClientRect();
-    if(r.top<window.innerHeight*0.9 && r.bottom>0) start();
-    const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){start(); io.disconnect();}})},{threshold:0.05});
-    io.observe(el);
-  });
-}
-if (el.classList.contains('done') || el.classList.contains('typing')) return;
-            el.classList.add('typing');
-            let i=0; const tick=()=>{ i++; el.textContent = full.slice(0,i); if (i<full.length) setTimeout(tick, speed); else { el.classList.add('done'); el.classList.remove('typing'); } };
-            setTimeout(tick, delay);
-          };
-          // If already visible, start now
-          const r = el.getBoundingClientRect();
-          if (r.top < window.innerHeight*0.9 && r.bottom > 0) start();
-          const io = new IntersectionObserver(entries=>{ entries.forEach(e=>{ if (e.isIntersecting){ start(); io.disconnect(); } });}, {threshold:0.05});
-          io.observe(el);
-          // Safety: ensure it starts after onload if still pending
-          window.addEventListener('load', ()=>{ const rr = el.getBoundingClientRect(); if (!el.classList.contains('done') && rr.top < window.innerHeight) start(); }, { once: true });
-        });
-      }
+        const els = document.querySelectorAll('[data-typewrite]');
+        els.forEach(el=>{
+          const full = el.textContent.trim();
+          const speed = parseInt(el.getAttribute('data-type-speed')||'28',10);
+          const delay = parseInt(el.getAttribute('data-type-delay')||'150',10);
+          el.textContent=''; el.classList.add('typewrite');
+          const start=()=>{
+          if (prefersReduced){ el.textContent=full; el.classList.add('done'); return; }
           if (el.classList.contains('done') || el.classList.contains('typing')) return;
           el.classList.add('typing');
           let i=0; const tick=()=>{ i++; el.textContent = full.slice(0,i); if (i<full.length) setTimeout(tick, speed); else { el.classList.add('done'); el.classList.remove('typing'); } };
