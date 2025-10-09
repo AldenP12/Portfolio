@@ -9,6 +9,47 @@
   <style>
     :root { --ring:#e2e8f0; }
     .card { border:1px solid var(--ring); border-radius:16px; box-shadow:0 8px 24px rgba(2,6,23,.06); background:#fff; }
+
+    /* === Animation kit additions (non-destructive) === */
+    :root{
+      --anim-fast:160ms; --anim-med:360ms; --anim-slow:800ms;
+      --easing:cubic-bezier(.22,.61,.36,1);
+      --hover-scale:1.04; /* cards/buttons expand to this */
+      --sibling-shift:12px; /* how much neighbors nudge away */
+      --reveal-translate:24px; /* scroll reveal offset */
+      --shadow-sm:0 1px 2px rgba(0,0,0,.06), 0 1px 1px rgba(0,0,0,.04);
+      --shadow-md:0 6px 16px rgba(0,0,0,.12);
+      --radius:16px;
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration:1ms !important; transition-duration:1ms !important; scroll-behavior:auto !important; }
+    }
+
+    /* Hover/focus expand for cards and explicit .btns */
+    .card, .btn{
+      transition: transform var(--anim-med) var(--easing), box-shadow var(--anim-fast) var(--easing);
+      transform-origin:center; will-change:transform;
+    }
+    .card:hover, .card:focus-visible,
+    .btn:hover, .btn:focus-visible{
+      transform: scale(var(--hover-scale));
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Neighbor nudge (JS sets --shift-x/--shift-y and .moved-by-hover) */
+    .moved-by-hover{ transform: translate(var(--shift-x,0px), var(--shift-y,0px)); }
+
+    /* Scroll reveal (auto-applied to .card, .btn, h1, h2 via JS) */
+    .will-reveal{ opacity:0; transform: translateY(var(--reveal-translate)); }
+    .reveal-in{ opacity:1; transform: translateY(0); transition: opacity var(--anim-slow) var(--easing), transform var(--anim-slow) var(--easing); }
+    .reveal-in{ transition-delay: calc(var(--stagger, 0) * 60ms); }
+
+    /* Title typewriter */
+    .typewrite{ display:inline-block; position:relative; white-space:nowrap; overflow:hidden; border-right:2px solid currentColor; animation: caretBlink 1s step-end infinite; }
+    .typewrite.done{ border-right-color:transparent; animation:none; }
+    @keyframes caretBlink{ 50% { border-color: transparent; } }
   </style>
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -31,7 +72,7 @@
     function Section({ id, title, children, className = "" }){
       return (
         <section id={id} className={"max-w-6xl mx-auto px-6 " + className}>
-          {title && <h2 className="text-2xl font-bold mb-6">{title}</h2>}
+          {title && <h2 className="text-2xl font-bold mb-6 typewrite" data-typewrite data-type-speed="24">{title}</h2>}
           {children}
         </section>
       );
@@ -68,16 +109,16 @@ function DepositionEtchCard() {
   const maxScale = Math.max(t0, tFinal, 100);            // for bar scale
 
   return (
-    <div className="card p-6">
+    <div className="card p-6" data-reveal>
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold">Deposition / Etch visualizer</h2>
         <div className="flex gap-2">
           <button
-            className={"px-3 py-1 rounded-lg border " + (mode==="dep" ? "border-blue-500 text-blue-600 bg-blue-50" : "border-slate-200 bg-slate-50")}
+            className={"btn px-3 py-1 rounded-lg border " + (mode==="dep" ? "border-blue-500 text-blue-600 bg-blue-50" : "border-slate-200 bg-slate-50")}
             onClick={()=>setMode("dep")}
           >Deposition</button>
           <button
-            className={"px-3 py-1 rounded-lg border " + (mode==="etch" ? "border-blue-500 text-blue-600 bg-blue-50" : "border-slate-200 bg-slate-50")}
+            className={"btn px-3 py-1 rounded-lg border " + (mode==="etch" ? "border-blue-500 text-blue-600 bg-blue-50" : "border-slate-200 bg-slate-50")}
             onClick={()=>setMode("etch")}
           >Etch</button>
         </div>
@@ -173,7 +214,7 @@ function ThinFilmCard() {
   const poly = toPolyline(data, 600, 260, 36);
 
   return (
-    <div className="card p-6">
+    <div className="card p-6" data-reveal>
       <h2 className="text-xl font-semibold mb-4">Thin-film interference (reflectance vs wavelength)</h2>
 
       {/* Controls */}
@@ -219,7 +260,6 @@ function ThinFilmCard() {
 
 
 
-    
     function Portfolio(){
       return (
         <div className="min-h-screen">
@@ -257,12 +297,12 @@ function ThinFilmCard() {
   <div className="grid lg:grid-cols-12 gap-12 items-start">
     {/* LEFT: title + summary + chips (all in one column) */}
     <div className="lg:col-span-7 flex flex-col gap-6">
-      <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.15]">
+      <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.15] typewrite" data-typewrite data-type-speed="26">
         Wafer-scale photonics and nanofabrication
       </h1>
 
       {/* Summary lives in the hero now */}
-      <div className="card p-8">
+      <div className="card p-8" data-reveal>
         <h2 className="sr-only">Summary</h2>
         <p className="text-slate-700 text-[1.05rem] leading-8">
           Nanotechnology Engineering student focused on photonic-fluidic devices and cleanroom nanofabrication.
@@ -271,7 +311,7 @@ function ThinFilmCard() {
         </p>
       </div>
 {/* Education badge */}
-<div className="card p-4 flex items-center gap-4">
+<div className="card p-4 flex items-center gap-4" data-reveal>
   <span className="text-2xl" aria-hidden="true">🎓</span>
   <div className="flex-1">
     <div className="font-semibold">Honours Nanotechnology Engineering</div>
@@ -283,7 +323,7 @@ function ThinFilmCard() {
       {/* (optional) chips */}
       <div className="flex flex-wrap gap-2">
         {['Photonic-fluidic devices','Nanofab & metrology','Optics & heat transfer','IP & papers'].map((t)=>(
-          <span key={t} className="text-sm px-3 py-1 rounded-full border border-slate-200 bg-slate-50 text-slate-700">{t}</span>
+          <span key={t} className="text-sm px-3 py-1 rounded-full border border-slate-200 bg-slate-50 text-slate-700 will-reveal">{t}</span>
         ))}
       </div>
     </div>
@@ -291,13 +331,13 @@ function ThinFilmCard() {
     {/* RIGHT: headshot + latest */}
     <aside className="lg:col-span-5 space-y-6">
       <figure>
-        <div className="w-full aspect-[4/5] overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
+        <div className="w-full aspect-[4/5] overflow-hidden rounded-2xl border border-slate-200 shadow-sm will-reveal">
           <img src="images/headshot.jpg" alt="Alden Panicker"
                className="w-full h-full object-cover [object-position:50%_30%]" />
         </div>
       </figure>
 
-      <div className="card p-6 space-y-4">
+      <div className="card p-6 space-y-4" data-reveal>
         <div className="flex items-center justify-between">
           <span className="text-slate-600">Latest</span>
           <span className="text-xs px-2 py-1 rounded-full border border-slate-200 bg-slate-50">Research</span>
@@ -342,9 +382,9 @@ function ThinFilmCard() {
    Summary (single, aesthetic) */}
           {/* Projects */}
           <Section id="projects" className="py-14">
-            <h2 className="text-2xl font-bold mb-6 relative pl-4 before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-6 before:w-1 before:rounded before:bg-blue-500">Flagship Project — Dynamic view-angle-controlled optical display/encryption</h2>
-            <div className="grid lg:grid-cols-2 gap-10">
-              <figure className="card p-4">
+            <h2 className="text-2xl font-bold mb-6 relative pl-4 before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-6 before:w-1 before:rounded before:bg-blue-500 typewrite" data-typewrite data-type-speed="22">Flagship Project — Dynamic view-angle-controlled optical display/encryption</h2>
+            <div className="grid lg:grid-cols-2 gap-10" data-hover-grid>
+              <figure className="card p-4" data-reveal>
                 <div className="w-full aspect-[4/3] overflow-hidden rounded-xl border border-slate-200">
                   {/* Top‑anchored crop so the upper design stays in frame */}
                   <img src={IMG_BADGE} alt="ID‑badge concept demonstrating selective visibility for encrypted information"
@@ -355,7 +395,7 @@ function ThinFilmCard() {
                 </figcaption>
               </figure>
 
-              <figure className="card p-4">
+              <figure className="card p-4" data-reveal>
                 <div className="w-full aspect-[4/3] overflow-hidden rounded-xl border border-slate-200">
                   <img src={IMG_CAR} alt="Automotive passenger‑side display concept showing controlled visibility"
                        className="w-full h-full object-cover" />
@@ -364,7 +404,7 @@ function ThinFilmCard() {
               </figure>
             </div>
 
-            <div className="card p-6 mt-8">
+            <div className="card p-6 mt-8" data-reveal>
               <ul className="space-y-2 text-slate-800 list-disc pl-5">
                 <li><strong>Role:</strong> Lead author & inventor (co‑lead with collaborator Raphael Kay).</li>
                 <li><strong>Focus:</strong> I develop wafer‑scale nanofabrication on silicon, design and characterize optical behavior, and tune performance within robust, end‑to‑end cleanroom processes.</li>
@@ -376,7 +416,7 @@ function ThinFilmCard() {
 
 {/* === INTERACTIVE SIMULATIONS === */}
 <Section id="simulations" className="py-12">
-  <div className="grid lg:grid-cols-2 gap-10">
+  <div className="grid lg:grid-cols-2 gap-10" data-hover-grid>
     <DepositionEtchCard />
     <ThinFilmCard />
   </div>
@@ -421,12 +461,12 @@ function ThinFilmCard() {
           */}
           {/* Experience with aligned photos underneath specific cards */}
           <Section id="experience" className="py-14">
-  <h2 className="text-2xl font-bold mb-6">Experience</h2>
+  <h2 className="text-2xl font-bold mb-6 typewrite" data-typewrite data-type-speed="22">Experience</h2>
 
   {/* Equal heights + bottom-aligned figures */}
-  <div className="grid lg:grid-cols-3 gap-10 items-stretch">
+  <div className="grid lg:grid-cols-3 gap-10 items-stretch" data-hover-grid>
     {/* Card 1 */}
-    <div className="card p-6 flex flex-col">
+    <div className="card p-6 flex flex-col" data-reveal>
       <h3 className="font-semibold">Harvard SEAS — Permanent Part-Time Researcher</h3>
       <p className="text-sm text-slate-600">May 2025 – Present</p>
       <ul className="space-y-2 text-slate-800 list-disc pl-5 mt-3">
@@ -445,7 +485,7 @@ function ThinFilmCard() {
     </div>
 
     {/* Card 2 */}
-    <div className="card p-6 flex flex-col">
+    <div className="card p-6 flex flex-col" data-reveal>
       <h3 className="font-semibold">Harvard SEAS — Aizenberg Lab (Co-op)</h3>
       <p className="text-sm text-slate-600">Sep 2024 – May 2025</p>
       <ul className="space-y-2 text-slate-800 list-disc pl-5 mt-3">
@@ -463,7 +503,7 @@ function ThinFilmCard() {
     </div>
 
     {/* Card 3 */}
-    <div className="card p-6 flex flex-col">
+    <div className="card p-6 flex flex-col" data-reveal>
       <h3 className="font-semibold">Quantum Nano Center — University of Waterloo</h3>
       <ul className="space-y-2 text-slate-800 list-disc pl-5 mt-3">
         <li>MOSFET/IC fabrication and testing; four-point probe; I–V & C–V; threshold and mobility extraction.</li>
@@ -484,8 +524,8 @@ function ThinFilmCard() {
           {/* Contact */}
           <footer id="contact" className="border-t border-slate-200 bg-white/60">
             <div className="max-w-6xl mx-auto px-6 py-12">
-              <h2 className="text-2xl font-bold mb-4">Contact</h2>
-              <a className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-blue-600 hover:text-blue-700"
+              <h2 className="text-2xl font-bold mb-4 typewrite" data-typewrite data-type-speed="22">Contact</h2>
+              <a className="btn inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-blue-600 hover:text-blue-700"
    href="mailto:aa2panic@uwaterloo.ca">Email me</a>
 
               <div className="text-sm text-slate-600 mt-4">© {new Date().getFullYear()} Alden Panicker</div>
@@ -497,6 +537,97 @@ function ThinFilmCard() {
 
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<Portfolio />);
+
+    // ===== Animation initializers (vanilla JS, runs after render) =====
+    (function(){
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // 1) Hover expand neighbor-nudge for any [data-hover-grid]
+      function setupHoverGrids(){
+        const grids = document.querySelectorAll('[data-hover-grid]');
+        grids.forEach(grid => {
+          const items = Array.from(grid.querySelectorAll('.card'));
+          let hovered = null; let raf = null;
+          const reset = () => items.forEach(el => { el.classList.remove('moved-by-hover'); el.style.removeProperty('--shift-x'); el.style.removeProperty('--shift-y'); });
+          const update = () => {
+            if (prefersReduced || !hovered) return;
+            const r = hovered.getBoundingClientRect();
+            const hx = r.left + r.width/2, hy = r.top + r.height/2;
+            const push = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sibling-shift')) || 12;
+            items.forEach(el => {
+              if (el===hovered) return;
+              const b = el.getBoundingClientRect();
+              let dx = (b.left + b.width/2) - hx; let dy = (b.top + b.height/2) - hy;
+              const len = Math.hypot(dx,dy)||1; dx/=len; dy/=len;
+              el.style.setProperty('--shift-x', (dx*push).toFixed(2)+'px');
+              el.style.setProperty('--shift-y', (dy*push).toFixed(2)+'px');
+              el.classList.add('moved-by-hover');
+            });
+          };
+          const request = () => { if (raf) cancelAnimationFrame(raf); raf = requestAnimationFrame(update); };
+          items.forEach(el=>{
+            el.addEventListener('mouseenter', ()=>{ hovered=el; request(); });
+            el.addEventListener('focus', ()=>{ hovered=el; request(); });
+            el.addEventListener('mouseleave', ()=>{ hovered=null; reset(); });
+            el.addEventListener('blur', ()=>{ hovered=null; reset(); });
+          });
+          window.addEventListener('resize', request, {passive:true});
+          window.addEventListener('scroll', request, {passive:true});
+        });
+      }
+
+      // 2) Scroll reveal — auto-mark typical elements if not explicitly flagged
+      function setupReveal(){
+        const candidates = document.querySelectorAll('.card, .btn, h1, h2, [data-reveal]');
+        candidates.forEach(el=>{
+          if (!el.classList.contains('reveal-in')) el.classList.add('will-reveal');
+        });
+        const byParent = new Map();
+        const list = Array.from(candidates);
+        list.forEach(el=>{
+          const group = el.closest('[data-hover-grid]') || el.parentElement;
+          if (!byParent.has(group)) byParent.set(group, []);
+          byParent.get(group).push(el);
+        });
+        const io = new IntersectionObserver(entries=>{
+          entries.forEach(entry=>{
+            if (entry.isIntersecting){
+              const el = entry.target; const group = el.closest('[data-hover-grid]') || el.parentElement;
+              const siblings = byParent.get(group)||[el];
+              siblings.forEach((sib,i)=>{
+                if (!sib.classList.contains('reveal-in')){
+                  sib.style.setProperty('--stagger', i);
+                  sib.classList.remove('will-reveal'); sib.classList.add('reveal-in');
+                }
+              });
+              io.unobserve(el);
+            }
+          });
+        }, { rootMargin: '0px 0px -10% 0px', threshold: 0.12 });
+        list.forEach(el=>io.observe(el));
+      }
+
+      // 3) Typewriter for headings with [data-typewrite]
+      function setupTypewriter(){
+        const els = document.querySelectorAll('[data-typewrite]');
+        els.forEach(el=>{
+          const full = el.textContent.trim();
+          const speed = parseInt(el.getAttribute('data-type-speed')||'28',10);
+          const delay = parseInt(el.getAttribute('data-type-delay')||'150',10);
+          el.textContent=''; el.classList.add('typewrite');
+          const start=()=>{
+            if (prefersReduced){ el.textContent=full; el.classList.add('done'); return; }
+            let i=0; const tick=()=>{ i++; el.textContent = full.slice(0,i); if (i<full.length) setTimeout(tick, speed); else el.classList.add('done'); };
+            setTimeout(tick, delay);
+          };
+          const io = new IntersectionObserver(entries=>{ entries.forEach(e=>{ if (e.isIntersecting){ start(); io.disconnect(); } });}, {threshold:0.2});
+          io.observe(el);
+        });
+      }
+
+      // Kick everything after the React render cycle
+      requestAnimationFrame(()=>{ setupHoverGrids(); setupReveal(); setupTypewriter(); });
+    })();
   </script>
 </body>
 </html>
