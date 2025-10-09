@@ -37,6 +37,36 @@
       );
     }
 
+
+
+    // -- Simple simulation template (replace with your math) --
+function simulateExample(N = 500) {
+  // Example: damped oscillator x'' + 0.15 x' + x = 0, Euler integrator
+  const dt = 0.02;
+  let x = 1, v = 0;               // initial conditions
+  const out = [];
+  for (let i = 0; i < N; i++) {
+    const a = -0.15*v - x;        // acceleration
+    v += a*dt;
+    x += v*dt;
+    out.push([i*dt, x]);
+  }
+  return out;                     // [[t0,x0], [t1,x1], ...]
+}
+
+// Turn points into an SVG polyline string
+function toPolyline(points, w=500, h=220, pad=10) {
+  if (!points.length) return "";
+  const xs = points.map(p=>p[0]), ys = points.map(p=>p[1]);
+  const xmin = Math.min(...xs), xmax = Math.max(...xs);
+  const ymin = Math.min(...ys), ymax = Math.max(...ys);
+  const sx = (x)=> pad + (w-2*pad) * (x - xmin)/(xmax - xmin || 1);
+  const sy = (y)=> h - pad - (h-2*pad) * (y - ymin)/(ymax - ymin || 1);
+  return points.map(([x,y])=>`${sx(x)},${sy(y)}`).join(" ");
+}
+
+
+    
     function Portfolio(){
       return (
         <div className="min-h-screen">
@@ -190,6 +220,45 @@
             </div>
           </Section>
 
+
+
+
+          {/* Simulation (click to run) */}
+<Section id="sim" className="py-10">
+  <div className="card p-6">
+    <div className="flex items-center justify-between mb-4">
+      <h2 className="text-xl font-semibold">Interactive simulation</h2>
+      <button
+        className="px-4 py-2 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100"
+        onClick={()=>{
+          const data = simulateExample(600);    // <-- replace with your calc
+          const poly = toPolyline(data);
+          // store polyline string in a data- attribute for simple no-state update
+          const el = document.getElementById("sim-poly");
+          if (el) el.setAttribute("points", poly);
+        }}
+      >
+        Run
+      </button>
+    </div>
+    <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+      <svg width="100%" height="240" viewBox="0 0 500 240" preserveAspectRatio="none">
+        {/* axes */}
+        <rect x="0" y="0" width="500" height="240" fill="white"/>
+        <line x1="40" y1="220" x2="480" y2="220" stroke="#cbd5e1"/>
+        <line x1="40" y1="20"  x2="40"  y2="220" stroke="#cbd5e1"/>
+        {/* curve */}
+        <polyline id="sim-poly" fill="none" stroke="#2563eb" stroke-width="2" points=""/>
+      </svg>
+    </div>
+    {/* instructions (optional) */}
+    <p className="text-sm text-slate-600 mt-3">
+      Click <em>Run</em> to generate the curve. Replace <code>simulateExample</code> with your equations to visualize your own model.
+    </p>
+  </div>
+</Section>
+
+          
           {/* Experience with aligned photos underneath specific cards */}
           <Section id="experience" className="py-14">
   <h2 className="text-2xl font-bold mb-6">Experience</h2>
