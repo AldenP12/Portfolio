@@ -73,7 +73,7 @@
     function Section({ id, title, children, className = "" }){
       return (
         <section id={id} className={"max-w-6xl mx-auto px-6 " + className}>
-          {title && <h2 className="text-2xl font-bold mb-6 typewrite" data-typewrite data-type-speed="24">{title}</h2>}
+          {title && <h2 className="text-2xl font-bold mb-8 md:mb-10 typewrite" data-typewrite data-type-speed="24">{title}</h2>}
           {children}
         </section>
       );
@@ -334,7 +334,8 @@ function ThinFilmCard() {
       <figure>
         <div className="w-full aspect-[4/5] overflow-hidden rounded-2xl border border-slate-200 shadow-sm will-reveal" data-reveal>
           <img src="images/headshot.jpg" alt="Alden Panicker"
-               className="w-full h-full object-cover [object-position:50%_30%]" />
+               className="w-full h-full object-cover [object-position:50%_30%]"
+               onError={(e)=>{ e.currentTarget.onerror=null; e.currentTarget.src='https://via.placeholder.com/800x1000?text=Headshot'; }} />
         </div>
       </figure>
 
@@ -525,8 +526,8 @@ function ThinFilmCard() {
           {/* Contact */}
           <footer id="contact" className="border-t border-slate-200 bg-white/60">
             <div className="max-w-6xl mx-auto px-6 py-12">
-              <h2 className="text-2xl font-bold mb-4 typewrite" data-typewrite data-type-speed="22">Contact</h2>
-              <a className="btn inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-blue-600 hover:text-blue-700"
+              <h2 className="text-2xl font-bold mb-6 typewrite" data-typewrite data-type-speed="22">Contact</h2>
+              <a className="btn inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-blue-600 hover:text-blue-700 mt-3"
    href="mailto:aa2panic@uwaterloo.ca">Email me</a>
 
               <div className="text-sm text-slate-600 mt-4">© {new Date().getFullYear()} Alden Panicker</div>
@@ -606,6 +607,17 @@ function ThinFilmCard() {
           });
         }, { rootMargin: '0px 0px -10% 0px', threshold: 0.12 });
         list.forEach(el=>io.observe(el));
+        // Fallback: if some items are initially visible but not triggering, reveal them after a short delay
+        setTimeout(()=>{
+          document.querySelectorAll('.will-reveal').forEach((el,i)=>{
+            const rect = el.getBoundingClientRect();
+            if (rect.top < innerHeight && rect.bottom > 0) {
+              el.style.setProperty('--stagger', i % 6);
+              el.classList.remove('will-reveal');
+              el.classList.add('reveal-in');
+            }
+          });
+        }, 600);
       }
 
       // 3) Typewriter for headings with [data-typewrite]
@@ -617,12 +629,18 @@ function ThinFilmCard() {
           const delay = parseInt(el.getAttribute('data-type-delay')||'150',10);
           el.textContent=''; el.classList.add('typewrite');
           const start=()=>{
-            if (prefersReduced){ el.textContent=full; el.classList.add('done'); return; }
-            el.classList.add('typing');
-            let i=0; const tick=()=>{ i++; el.textContent = full.slice(0,i); if (i<full.length) setTimeout(tick, speed); else { el.classList.add('done'); el.classList.remove('typing'); } };
-            setTimeout(tick, delay);
-          };
-          const io = new IntersectionObserver(entries=>{ entries.forEach(e=>{ if (e.isIntersecting){ start(); io.disconnect(); } });}, {threshold:0.2});
+          if (prefersReduced){ el.textContent=full; el.classList.add('done'); return; }
+          if (el.classList.contains('done') || el.classList.contains('typing')) return;
+          el.classList.add('typing');
+          let i=0; const tick=()=>{ i++; el.textContent = full.slice(0,i); if (i<full.length) setTimeout(tick, speed); else { el.classList.add('done'); el.classList.remove('typing'); } };
+          setTimeout(tick, delay);
+        };
+        // Start immediately if already in view
+        const r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight*0.8 && r.bottom > 0) {
+          start();
+        }
+        const io = new IntersectionObserver(entries=>{ entries.forEach(e=>{ if (e.isIntersecting){ start(); io.disconnect(); } });}, {threshold:0.2});
           io.observe(el);
         });
       }
