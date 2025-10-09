@@ -333,7 +333,7 @@ function ThinFilmCard() {
     {/* RIGHT: headshot + latest */}
     <aside className="lg:col-span-5 space-y-6">
       <figure>
-        <div className="w-full aspect-[4/5] overflow-hidden rounded-2xl border border-slate-200 shadow-sm will-reveal" data-reveal>
+        <div className="w-full aspect-[4/5] overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
           <img src="images/headshot.jpg" alt="Alden Panicker"
                className="w-full h-full object-cover [object-position:50%_30%]"
                onError={(e)=>{ e.currentTarget.onerror=null; e.currentTarget.src='https://via.placeholder.com/800x1000?text=Headshot'; }} />
@@ -385,7 +385,7 @@ function ThinFilmCard() {
    Summary (single, aesthetic) */}
           {/* Projects */}
           <Section id="projects" className="py-14">
-            <h2 className="text-2xl font-bold mb-6 relative pl-4 before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-6 before:w-1 before:rounded before:bg-blue-500 typewrite" data-typewrite data-type-speed="22">Flagship Project — Dynamic view-angle-controlled optical display/encryption</h2>
+            <h2 className="text-2xl font-bold mb-8 md:mb-10 relative pl-4 before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-6 before:w-1 before:rounded before:bg-blue-500 typewrite" data-typewrite data-type-speed="22">Flagship Project — Dynamic view-angle-controlled optical display/encryption</h2>
             <div className="grid lg:grid-cols-2 gap-10" data-hover-grid>
               <figure className="card p-4" data-reveal>
                 <div className="w-full aspect-[4/3] overflow-hidden rounded-xl border border-slate-200">
@@ -464,7 +464,7 @@ function ThinFilmCard() {
           */}
           {/* Experience with aligned photos underneath specific cards */}
           <Section id="experience" className="py-14">
-  <h2 className="text-2xl font-bold mb-6 typewrite" data-typewrite data-type-speed="22">Experience</h2>
+  <h2 className="text-2xl font-bold mb-8 md:mb-10 typewrite" data-typewrite data-type-speed="22">Experience</h2>
 
   {/* Equal heights + bottom-aligned figures */}
   <div className="grid lg:grid-cols-3 gap-10 items-stretch" data-hover-grid>
@@ -527,8 +527,8 @@ function ThinFilmCard() {
           {/* Contact */}
           <footer id="contact" className="border-t border-slate-200 bg-white/60">
             <div className="max-w-6xl mx-auto px-6 py-12">
-              <h2 className="text-2xl font-bold mb-6 typewrite" data-typewrite data-type-speed="22">Contact</h2>
-              <a className="btn inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-blue-600 hover:text-blue-700 mt-3"
+              <h2 className="text-2xl font-bold mb-8 md:mb-10 typewrite" data-typewrite data-type-speed="22">Contact</h2>
+              <a className="btn inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-blue-600 hover:text-blue-700 mt-5"
    href="mailto:aa2panic@uwaterloo.ca">Email me</a>
 
               <div className="text-sm text-slate-600 mt-4">© {new Date().getFullYear()} Alden Panicker</div>
