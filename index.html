@@ -623,15 +623,24 @@ function ThinFilmCard() {
 
       // 3) Typewriter for headings with [data-typewrite]
       function setupTypewriter(){
-        const els = document.querySelectorAll('[data-typewrite]');
-        els.forEach(el=>{
-          const full = (el.getAttribute('data-type-text') || el.textContent).trim();
-          const speed = parseInt(el.getAttribute('data-type-speed')||'28',10);
-          const delay = parseInt(el.getAttribute('data-type-delay')||'150',10);
-          el.textContent=''; el.classList.add('typewrite');
-          const start=()=>{
-            if (prefersReduced){ el.textContent=full; el.classList.add('done'); return; }
-            if (el.classList.contains('done') || el.classList.contains('typing')) return;
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('[data-typewrite]').forEach(el=>{
+    const full=(el.getAttribute('data-type-text')||el.textContent||'').trim();
+    const speed=parseInt(el.getAttribute('data-type-speed')||'28',10);
+    const delay=parseInt(el.getAttribute('data-type-delay')||'150',10);
+    el.textContent='';
+    const start=()=>{
+      if(prefersReduced){ el.textContent=full; return; }
+      let i=0; const tick=()=>{ i++; el.textContent=full.slice(0,i); if(i<full.length) setTimeout(tick,speed); };
+      setTimeout(tick,delay);
+    };
+    const r=el.getBoundingClientRect();
+    if(r.top<window.innerHeight*0.9 && r.bottom>0) start();
+    const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){start(); io.disconnect();}})},{threshold:0.05});
+    io.observe(el);
+  });
+}
+if (el.classList.contains('done') || el.classList.contains('typing')) return;
             el.classList.add('typing');
             let i=0; const tick=()=>{ i++; el.textContent = full.slice(0,i); if (i<full.length) setTimeout(tick, speed); else { el.classList.add('done'); el.classList.remove('typing'); } };
             setTimeout(tick, delay);
