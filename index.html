@@ -464,111 +464,114 @@ function ThinFilmCard() {
           */}
           {/* Experience with aligned photos underneath specific cards */}
           <Section id="experience" className="py-14">
-  <h2 className="text-2xl font-bold mb-8 md:mb-10 typewrite" data-typewrite data-type-speed="22">Experience</h2>
+  <h2 className="text-2xl font-bold mb-8 md:mb-10">Experience</h2>
 
-  {/* Equal heights + bottom-aligned figures */}
-  <div className="mt-6 grid lg:grid-cols-3 gap-10 items-stretch" data-hover-grid>
-    {/* Card 1 */}
-    <div className="card p-6 flex flex-col" data-reveal>
-      <h3 className="font-semibold">Harvard SEAS — Permanent Part-Time Researcher</h3>
-      <p className="text-sm text-slate-600">May 2025 – Present</p>
-      <ul className="space-y-2 text-slate-800 list-disc pl-5 mt-3">
-        <li>Transforming photonic-fluidic technologies into patented IP and peer-reviewed publications.</li>
-        <li>Patent application in preparation; claims drafted; prior-art reviewed with counsel.</li>
-        <li>Lead author on next-generation optical display/encryption with dynamic view-angle control.</li>
-        <li>Co-author on additional papers across nanomaterial and photonic-fluidic devices.</li>
-      </ul>
-      <figure className="mt-auto pt-4">
-        <div className="w-full aspect-[3/2] overflow-hidden rounded-xl border border-slate-200">
-          <img src={IMG_LAB_BENCH} alt="Prototype evaluation in the lab by two researchers wearing safety glasses"
-               className="w-full h-full object-cover" />
+  {/* Themed clusters for readability */}
+  <div className="grid gap-8" data-hover-grid>
+    {/* Cluster 1: Photonic & Nanofabrication */}
+    <div className="card p-6" data-reveal>
+      <div className="flex items-start justify-between gap-4">
+        <h3 className="text-lg font-semibold flex items-center gap-2"><span aria-hidden>🔬</span> Photonic & Nanofabrication</h3>
+        <span className="text-xs px-2 py-1 rounded-full border border-slate-200 bg-slate-50">Harvard SEAS</span>
+      </div>
+      <div className="mt-4 grid lg:grid-cols-2 gap-6">
+        <div>
+          <div className="font-medium">Permanent Part‑Time Researcher · May 2025 – Present</div>
+          <ul className="mt-2 space-y-2 text-slate-800 list-disc pl-5">
+            <li>Transforming photonic‑fluidic technologies into patented IP & peer‑reviewed publications.</li>
+            <li>Patent in preparation; claims drafted; prior‑art reviewed with counsel.</li>
+            <li>Lead author on dynamic view‑angle display/encryption optics.</li>
+            <li>Co‑authoring additional nanomaterials / photonic‑fluidic papers.</li>
+          </ul>
         </div>
-        <figcaption className="text-sm text-slate-700 mt-2">Prototype evaluation in the lab.</figcaption>
-      </figure>
-    </div>
-
-    {/* Card 2 */}
-    <div className="card p-6 flex flex-col" data-reveal>
-      <h3 className="font-semibold">Harvard SEAS — Aizenberg Lab (Co-op)</h3>
-      <p className="text-sm text-slate-600">Sep 2024 – May 2025</p>
-      <ul className="space-y-2 text-slate-800 list-disc pl-5 mt-3">
-        <li>Wafer design (KLayout) and end-to-end cleanroom processes: MLA lithography, RIE, PVD/CVD.</li>
-        <li>Tuned visible–IR transparency with nanoparticles and thin films; UV-Vis/FTIR characterization.</li>
-        <li>Quantified radiative cooling and specularity control; opto-thermal experiments and modeling.</li>
-      </ul>
-      <figure className="mt-auto pt-4">
-        <div className="w-full aspect-[3/2] overflow-hidden rounded-xl border border-slate-200">
-          <img src={IMG_GROUP} alt="Aizenberg Lab"
-               className="w-full h-full object-cover" style={{ objectPosition: '50% 0%' }} />
+        <div>
+          <div className="font-medium">Aizenberg Lab — Visiting Researcher (Co‑op) · Sep 2024 – May 2025</div>
+          <ul className="mt-2 space-y-2 text-slate-800 list-disc pl-5">
+            <li>Wafer design (KLayout) and cleanroom flows: MLA lithography, RIE, PVD/CVD.</li>
+            <li>Tuned visible–IR transparency (nanoparticles & thin films); UV‑Vis/FTIR characterization.</li>
+            <li>Opto‑thermal experiments: radiative cooling, specularity control; modeling & analysis.</li>
+          </ul>
         </div>
-        <figcaption className="text-sm text-slate-700 mt-2">Aizenberg Lab</figcaption>
-      </figure>
+      </div>
     </div>
 
-    {/* Card 3 */}
-    <div className="card p-6 flex flex-col" data-reveal>
-      <h3 className="font-semibold">Quantum Nano Center — University of Waterloo</h3>
-      <ul className="space-y-2 text-slate-800 list-disc pl-5 mt-3">
-        <li>MOSFET/IC fabrication and testing; four-point probe; I–V & C–V; threshold and mobility extraction.</li>
-        <li>Quantum dots & QDLEDs: optical/electrical validation; emission peak & stability; band-gap and particle-size extraction.</li>
-        <li>Polymer & nanomaterials characterization (tensile, impact, DSC, TGA); SEM on nanogold wires; CNT Raman/UV-vis.</li>
-        <li>Designed and tested AC/DC circuits (amplifiers, RC/RLC filters, biasing networks); frequency response & transient analysis.</li>
-        <li>Bench characterization using oscilloscopes & network analyzers; gain, cutoff, and phase shift measurement.</li>
-        <li>SPICE & MATLAB simulations correlated with measured data; hands-on soldering & prototyping.</li>
-      </ul>
-      <figure className="mt-auto pt-4">
-        <div className="w-full aspect-[3/2] overflow-hidden rounded-xl border border-slate-200">
-          <img src={IMG_VIALS} alt="Quantum dot synthesis vials under UV showing tunable emission colors"
-               className="w-full h-full object-cover" />
+    {/* Cluster 2: Polymer & Materials Engineering */}
+    <div className="card p-6" data-reveal>
+      <h3 className="text-lg font-semibold flex items-center gap-2"><span aria-hidden>🧪</span> Polymer & Materials Engineering</h3>
+      <div className="mt-4 grid lg:grid-cols-2 gap-6">
+        <div>
+          <div className="font-medium">Harvard SEAS — Aizenberg Lab (Materials)</div>
+          <ul className="mt-2 space-y-2 text-slate-800 list-disc pl-5">
+            <li>PDMS soft‑lithography: O₂ plasma, silanization, mixing/degassing, curing; replicated microfins, gratings, Fresnel patterns.</li>
+            <li>Solvent bonding of PMMA; UV‑cure & heat‑cure epoxies for micro‑replication.</li>
+            <li>Fabricated high‑aspect‑ratio gratings & micro‑optics; profilometry & ellipsometry inspection.</li>
+          </ul>
         </div>
-        <figcaption className="text-sm text-slate-700 mt-2">Quantum dots — tunable emission.</figcaption>
-      </figure>
+        <div>
+          <div className="font-medium">Quantum Nano Center — University of Waterloo</div>
+          <ul className="mt-2 space-y-2 text-slate-800 list-disc pl-5">
+            <li>Emulsion polymerization of polystyrene; particle‑size control & measurement (DLS, AFM).</li>
+            <li>Mechanical & thermal characterization: tensile, impact, DSC, TGA; reports linking fillers/branching to properties.</li>
+            <li>SEM on nanogold wires (~1 nm); CNT Raman & UV‑Vis analysis.</li>
+            <li>Polymer synthesis workflow incl. RAFT & GPC characterization (in progress / toolkit).</li>
+          </ul>
+        </div>
+      </div>
     </div>
 
-    {/* Card 4 — Software & Data (City of Hamilton) */}
-    <div className="card p-6 flex flex-col" data-reveal>
-      <h3 className="font-semibold">City of Hamilton — Software / Data Intern</h3>
-      <p className="text-sm text-slate-600">May 2023 – Sept 2023</p>
-      <ul className="space-y-2 text-slate-800 list-disc pl-5 mt-3">
-        <li>Built automated, real‑time location‑based heatmaps and dashboards (Python, SQL, R, Power BI).</li>
-        <li>Developed scripts for in‑depth data analysis & visualization; cleaned and joined multi‑source datasets.</li>
-      </ul>
-    </div>
-
-    {/* Card 5 — Federal Government of Canada */}
-    <div className="card p-6 flex flex-col" data-reveal>
-      <h3 className="font-semibold">Government of Canada — IT / Software Intern</h3>
-      <p className="text-sm text-slate-600">Jan 2024 – May 2024</p>
-      <ul className="space-y-2 text-slate-800 list-disc pl-5 mt-3">
-        <li>Applied computer architecture knowledge (CPU, memory, peripherals) in enterprise hardware deployment & troubleshooting.</li>
-        <li>Supported software rollouts and data workflows; contributed automation scripts (Python/SQL).</li>
-      </ul>
+    {/* Cluster 3: Software & Data Engineering */}
+    <div className="card p-6" data-reveal>
+      <h3 className="text-lg font-semibold flex items-center gap-2"><span aria-hidden>💻</span> Software & Data Engineering</h3>
+      <div className="mt-4 grid lg:grid-cols-2 gap-6">
+        <div>
+          <div className="font-medium">City of Hamilton — Software / Data Intern · May 2023 – Sept 2023</div>
+          <ul className="mt-2 space-y-2 text-slate-800 list-disc pl-5">
+            <li>Automated real‑time, location‑based heatmaps & dashboards (Python, SQL, R, Power BI).</li>
+            <li>Data cleaning, joins, and analysis scripting for multi‑source datasets.</li>
+          </ul>
+        </div>
+        <div>
+          <div className="font-medium">Government of Canada — IT / Software Intern · Jan 2024 – May 2024</div>
+          <ul className="mt-2 space-y-2 text-slate-800 list-disc pl-5">
+            <li>Enterprise hardware deployment & troubleshooting (CPU, memory, peripherals).</li>
+            <li>Supported software rollouts & data workflows; contributed Python/SQL automations.</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </Section>
 
           {/* Skills */}
           <Section id="skills" className="py-14">
-            <h2 className="text-2xl font-bold mb-8 md:mb-10">Technical Skills</h2>
-            <div className="grid lg:grid-cols-2 gap-10">
-              <div className="card p-6" data-reveal>
-                <h3 className="font-semibold mb-3">Software & Modeling</h3>
-                <ul className="space-y-2 text-slate-800 list-disc pl-5">
-                  <li>Python, SQL, R; MATLAB; basic COMSOL; SPICE; Power BI.</li>
-                  <li>CAD & Design: SolidWorks; wafer layout in KLayout.</li>
-                  <li>Data analysis & visualization; automation scripting.</li>
-                </ul>
-              </div>
-              <div className="card p-6" data-reveal>
-                <h3 className="font-semibold mb-3">Nanofabrication & Metrology</h3>
-                <ul className="space-y-2 text-slate-800 list-disc pl-5">
-                  <li>MLA lithography; RIE etching; PVD/CVD thin‑film deposition.</li>
-                  <li>Profilometry, ellipsometry; UV‑Vis/FTIR; four‑point probe.</li>
-                  <li>Opto‑thermal experiments (radiative cooling, specularity tuning).</li>
-                </ul>
-              </div>
-            </div>
-          </Section>
+  <h2 className="text-2xl font-bold mb-8 md:mb-10">Technical Skills</h2>
+  <div className="grid lg:grid-cols-3 gap-10" data-hover-grid>
+    <div className="card p-6" data-reveal>
+      <h3 className="font-semibold mb-3">Software & Modeling</h3>
+      <ul className="space-y-2 text-slate-800 list-disc pl-5">
+        <li>Python, SQL, R; MATLAB; basic COMSOL; SPICE; Power BI.</li>
+        <li>CAD & Design: SolidWorks; wafer layout in KLayout.</li>
+        <li>Data analysis & visualization; automation scripting.</li>
+      </ul>
+    </div>
+    <div className="card p-6" data-reveal>
+      <h3 className="font-semibold mb-3">Nanofabrication & Metrology</h3>
+      <ul className="space-y-2 text-slate-800 list-disc pl-5">
+        <li>MLA lithography; RIE etching; PVD/CVD thin‑film deposition.</li>
+        <li>Profilometry, ellipsometry; UV‑Vis/FTIR; four‑point probe.</li>
+        <li>Opto‑thermal experiments (radiative cooling, specularity tuning).</li>
+      </ul>
+    </div>
+    <div className="card p-6" data-reveal>
+      <h3 className="font-semibold mb-3">Polymers & Materials Characterization</h3>
+      <ul className="space-y-2 text-slate-800 list-disc pl-5">
+        <li>DSC, TGA, tensile & impact testing; DLS & AFM particle‑size analysis.</li>
+        <li>SEM imaging; CNT Raman & UV‑Vis spectroscopy; GPC workflows.</li>
+        <li>PDMS soft‑lithography; PMMA bonding; epoxy replication.</li>
+      </ul>
+    </div>
+  </div>
+</Section>
 
           {/* Contact */}
           <footer id="contact" className="border-t border-slate-200 bg-white/60">
