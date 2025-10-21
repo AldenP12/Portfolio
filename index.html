@@ -512,6 +512,9 @@ function ThinFilmCard() {
         <li>MOSFET/IC fabrication and testing; four-point probe; I–V & C–V; threshold and mobility extraction.</li>
         <li>Quantum dots & QDLEDs: optical/electrical validation; emission peak & stability; band-gap and particle-size extraction.</li>
         <li>Polymer & nanomaterials characterization (tensile, impact, DSC, TGA); SEM on nanogold wires; CNT Raman/UV-vis.</li>
+        <li>Designed and tested AC/DC circuits (amplifiers, RC/RLC filters, biasing networks); frequency response & transient analysis.</li>
+        <li>Bench characterization using oscilloscopes & network analyzers; gain, cutoff, and phase shift measurement.</li>
+        <li>SPICE & MATLAB simulations correlated with measured data; hands-on soldering & prototyping.</li>
       </ul>
       <figure className="mt-auto pt-4">
         <div className="w-full aspect-[3/2] overflow-hidden rounded-xl border border-slate-200">
@@ -521,8 +524,51 @@ function ThinFilmCard() {
         <figcaption className="text-sm text-slate-700 mt-2">Quantum dots — tunable emission.</figcaption>
       </figure>
     </div>
+
+    {/* Card 4 — Software & Data (City of Hamilton) */}
+    <div className="card p-6 flex flex-col" data-reveal>
+      <h3 className="font-semibold">City of Hamilton — Software / Data Intern</h3>
+      <p className="text-sm text-slate-600">May 2023 – Sept 2023</p>
+      <ul className="space-y-2 text-slate-800 list-disc pl-5 mt-3">
+        <li>Built automated, real‑time location‑based heatmaps and dashboards (Python, SQL, R, Power BI).</li>
+        <li>Developed scripts for in‑depth data analysis & visualization; cleaned and joined multi‑source datasets.</li>
+      </ul>
+    </div>
+
+    {/* Card 5 — Federal Government of Canada */}
+    <div className="card p-6 flex flex-col" data-reveal>
+      <h3 className="font-semibold">Government of Canada — IT / Software Intern</h3>
+      <p className="text-sm text-slate-600">Jan 2024 – May 2024</p>
+      <ul className="space-y-2 text-slate-800 list-disc pl-5 mt-3">
+        <li>Applied computer architecture knowledge (CPU, memory, peripherals) in enterprise hardware deployment & troubleshooting.</li>
+        <li>Supported software rollouts and data workflows; contributed automation scripts (Python/SQL).</li>
+      </ul>
+    </div>
   </div>
 </Section>
+
+          {/* Skills */}
+          <Section id="skills" className="py-14">
+            <h2 className="text-2xl font-bold mb-8 md:mb-10">Technical Skills</h2>
+            <div className="grid lg:grid-cols-2 gap-10">
+              <div className="card p-6" data-reveal>
+                <h3 className="font-semibold mb-3">Software & Modeling</h3>
+                <ul className="space-y-2 text-slate-800 list-disc pl-5">
+                  <li>Python, SQL, R; MATLAB; basic COMSOL; SPICE; Power BI.</li>
+                  <li>CAD & Design: SolidWorks; wafer layout in KLayout.</li>
+                  <li>Data analysis & visualization; automation scripting.</li>
+                </ul>
+              </div>
+              <div className="card p-6" data-reveal>
+                <h3 className="font-semibold mb-3">Nanofabrication & Metrology</h3>
+                <ul className="space-y-2 text-slate-800 list-disc pl-5">
+                  <li>MLA lithography; RIE etching; PVD/CVD thin‑film deposition.</li>
+                  <li>Profilometry, ellipsometry; UV‑Vis/FTIR; four‑point probe.</li>
+                  <li>Opto‑thermal experiments (radiative cooling, specularity tuning).</li>
+                </ul>
+              </div>
+            </div>
+          </Section>
 
           {/* Contact */}
           <footer id="contact" className="border-t border-slate-200 bg-white/60">
