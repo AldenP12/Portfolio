@@ -4,8 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Alden Panicker — Portfolio</title>
-  <meta name="description" content="Alden Panicker — smart materials, photonic-fluidic devices, rapid prototyping, and nanofabrication portfolio." />
+  <meta name="description" content="Alden Panicker — smart materials, microfabrication, photonics, and device engineering portfolio." />
   <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
     :root { --ring:#e2e8f0; }
     .card { border:1px solid var(--ring); border-radius:16px; box-shadow:0 8px 24px rgba(2,6,23,.06); background:#fff; }
@@ -14,12 +15,11 @@
     :root{
       --anim-fast:160ms; --anim-med:360ms; --anim-slow:800ms;
       --easing:cubic-bezier(.22,.61,.36,1);
-      --hover-scale:1.04; /* cards/buttons expand to this */
-      --sibling-shift:12px; /* how much neighbors nudge away */
-      --reveal-translate:24px; /* scroll reveal offset */
+      --hover-scale:1.03;
+      --sibling-shift:10px;
+      --reveal-translate:20px;
       --shadow-sm:0 1px 2px rgba(0,0,0,.06), 0 1px 1px rgba(0,0,0,.04);
       --shadow-md:0 6px 16px rgba(0,0,0,.12);
-      --radius:16px;
     }
 
     /* Respect reduced motion */
@@ -30,7 +30,8 @@
     /* Hover/focus expand for cards and explicit .btn */
     .card, .btn{
       transition: transform var(--anim-med) var(--easing), box-shadow var(--anim-fast) var(--easing);
-      transform-origin:center; will-change:transform;
+      transform-origin:center;
+      will-change:transform;
     }
     .card:hover, .card:focus-visible,
     .btn:hover, .btn:focus-visible{
@@ -41,7 +42,7 @@
     /* Neighbor nudge (JS sets --shift-x/--shift-y and .moved-by-hover) */
     .moved-by-hover{ transform: translate(var(--shift-x,0px), var(--shift-y,0px)); }
 
-    /* Scroll reveal (auto-applied to .card, .btn, h1, h2 via JS) */
+    /* Scroll reveal */
     .will-reveal{ opacity:0; transform: translateY(var(--reveal-translate)); }
     .reveal-in{ opacity:1; transform: translateY(0); transition: opacity var(--anim-slow) var(--easing), transform var(--anim-slow) var(--easing); }
     .reveal-in{ transition-delay: calc(var(--stagger, 0) * 60ms); }
@@ -52,8 +53,23 @@
     .typewrite.done{ border-right-color: transparent; animation: none; }
     @keyframes caretBlink{ 50% { border-color: transparent; } }
 
-    /* Small utilities */
-    .kpi { border:1px solid var(--ring); border-radius:999px; padding:6px 10px; background:rgba(248,250,252,.9); }
+    /* Company-feel: section header accent */
+    .section-title{
+      position:relative;
+      padding-left:14px;
+    }
+    .section-title:before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:50%;
+      transform:translateY(-50%);
+      width:4px;
+      height:22px;
+      border-radius:999px;
+      background:#2563eb;
+      opacity:.9;
+    }
   </style>
 
   <!-- React (kept as in your original file) -->
@@ -61,33 +77,44 @@
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
+
 <body class="min-h-screen bg-gradient-to-b from-slate-50 to-white text-slate-900">
   <div id="root"></div>
 
   <script type="text/babel">
-    // === Keep image file names the same ===
-    const IMG_BADGE = "images/badge.png";        // top-anchored crop
+    // === Keep existing image file names the same ===
+    const IMG_BADGE = "images/badge.png";
     const IMG_CAR = "images/car.png";
     const IMG_LAB_BENCH = "images/lab-bench.png";
     const IMG_GROUP = "images/lab-group.png";
-    const IMG_VIALS = "images/qnc-vials.jpg";
+    const IMG_VIALS = "images/qnc-vials.jpg"; // quantum dots photo (used in flagship display project gallery)
     const IMG_HEADSHOT = "images/headshot.jpg";
 
-    // Optional wordmarks (remote, unchanged)
+    // Optional new images (add to /images if you want—site falls back gracefully if missing)
+    const IMG_CLEANROOM = "images/cleanroom.jpg";     // suggested: cleanroom / wafer photo
+    const IMG_GRATING = "images/grating.jpg";         // suggested: grating/microstructure microscope photo
+    const IMG_JANUS = "images/janus.jpg";             // suggested: Janus particles / clot diagram
+    const IMG_FIXTURE = "images/fixture.jpg";         // suggested: SolidWorks fixture / printed part photo
+
     const LOGO_HARVARD = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Harvard_University_logo.svg/600px-Harvard_University_logo.svg.png";
     const LOGO_WATERLOO = "https://upload.wikimedia.org/wikipedia/commons/b/b9/University_of_Waterloo_logo.png";
 
-    function Section({ id, title, children, className = "" }){
+    // Update these if you want the buttons to go somewhere real
+    const LINKS = {
+      resumePdf: "files/Alden_Panicker_Resume.pdf",
+      github: "https://github.com/",
+      linkedin: "https://www.linkedin.com/",
+      email: "mailto:aa2panic@uwaterloo.ca"
+    };
+
+    function Section({ id, title, subtitle, children, className = "" }){
       return (
         <section id={id} className={"max-w-6xl mx-auto px-6 " + className}>
           {title && (
-            <h2
-              className="text-2xl font-bold mb-8 md:mb-10 typewrite"
-              data-typewrite
-              data-type-speed="22"
-            >
-              {title}
-            </h2>
+            <div className="mb-8 md:mb-10">
+              <h2 className="text-2xl font-bold section-title typewrite" data-typewrite data-type-speed="22">{title}</h2>
+              {subtitle && <p className="text-slate-600 mt-3 max-w-3xl leading-7">{subtitle}</p>}
+            </div>
           )}
           {children}
         </section>
@@ -102,24 +129,90 @@
       );
     }
 
-    function QuickLink({ href, children }){
-      return (
-        <a className="btn inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-blue-700 hover:text-blue-800" href={href}>
-          {children}
-        </a>
-      );
+    function ButtonLink({ href, children, variant="primary" }){
+      const base = "btn inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200";
+      const styles = variant === "primary"
+        ? "bg-slate-50 hover:bg-slate-100 text-blue-700 hover:text-blue-800"
+        : "bg-white hover:bg-slate-50 text-slate-800";
+      return <a className={`${base} ${styles}`} href={href}>{children}</a>;
     }
 
-    function KPI({ label, value }){
+    function StatPill({ label, value }){
       return (
-        <div className="kpi text-sm text-slate-700">
-          <span className="text-slate-500">{label}: </span>
-          <strong>{value}</strong>
+        <div className="px-3 py-2 rounded-2xl border border-slate-200 bg-white/70 shadow-sm">
+          <div className="text-[11px] uppercase tracking-wide text-slate-500">{label}</div>
+          <div className="font-semibold text-slate-900">{value}</div>
         </div>
       );
     }
 
-    // ====== UTILITIES ======
+    function MediaItem({ src, alt, caption, pos="50% 50%", fallback=undefined, className="" }){
+      return (
+        <figure className={"rounded-xl border border-slate-200 overflow-hidden bg-white " + className}>
+          <div className="w-full aspect-[4/3]">
+            <img
+              src={src}
+              alt={alt}
+              className="w-full h-full object-cover"
+              style={{ objectPosition: pos }}
+              onError={(e)=>{
+                e.currentTarget.onerror = null;
+                if (fallback && fallback !== src) e.currentTarget.src = fallback;
+                else e.currentTarget.src = "https://via.placeholder.com/1200x900?text=Image";
+              }}
+            />
+          </div>
+          {caption && <figcaption className="text-xs text-slate-600 px-3 py-2 bg-white">{caption}</figcaption>}
+        </figure>
+      );
+    }
+
+    function CaseStudy({ title, oneLiner, tags=[], media=[], sections=[], outcome="" }){
+      return (
+        <article className="card p-6" data-reveal>
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <h3 className="text-lg md:text-xl font-semibold leading-snug">{title}</h3>
+              {oneLiner && <p className="text-slate-600 mt-2 leading-7">{oneLiner}</p>}
+              {tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {tags.map(t => <Tag key={t}>{t}</Tag>)}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {media.length > 0 && (
+            <div className={"mt-5 grid gap-4 " + (media.length >= 3 ? "md:grid-cols-3" : media.length === 2 ? "md:grid-cols-2" : "")} data-hover-grid>
+              {media.map((m, i) => (
+                <MediaItem key={i} {...m} />
+              ))}
+            </div>
+          )}
+
+          {sections.length > 0 && (
+            <div className="mt-5 space-y-4">
+              {sections.map((s, i) => (
+                <div key={i} className="rounded-xl border border-slate-200 bg-white p-4">
+                  <div className="font-semibold text-slate-900">{s.title}</div>
+                  <ul className="mt-2 space-y-2 text-slate-800 list-disc pl-5">
+                    {s.bullets.map((b, j) => <li key={j}>{b}</li>)}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {outcome && (
+            <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4 text-slate-800">
+              <strong>Outcome:</strong> {outcome}
+            </div>
+          )}
+        </article>
+      );
+    }
+
+    // ====== UTILITIES for interactive notes ======
     function linspace(a, b, n) {
       const arr = []; if (n <= 1) return [a];
       const step = (b - a) / (n - 1);
@@ -138,19 +231,19 @@
 
     // ====== (A) DEPOSITION / ETCH RATE VISUALIZER ======
     function DepositionEtchCard() {
-      const [mode, setMode] = React.useState("dep");     // "dep" or "etch"
-      const [rate, setRate] = React.useState(50);        // nm/min
-      const [time, setTime] = React.useState(10);        // min
-      const [t0, setT0]   = React.useState(200);         // initial thickness nm
+      const [mode, setMode] = React.useState("dep");
+      const [rate, setRate] = React.useState(50);
+      const [time, setTime] = React.useState(10);
+      const [t0, setT0]   = React.useState(200);
 
       const sign = mode === "dep" ? 1 : -1;
-      const tFinal = Math.max(0, t0 + sign * rate * time);   // clamp >= 0
-      const maxScale = Math.max(t0, tFinal, 100);            // for bar scale
+      const tFinal = Math.max(0, t0 + sign * rate * time);
+      const maxScale = Math.max(t0, tFinal, 100);
 
       return (
         <div className="card p-6" data-reveal>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-semibold">Process intuition: deposition / etch</h3>
+            <h3 className="text-lg font-semibold">Process intuition: deposition / etch</h3>
             <div className="flex gap-2">
               <button
                 className={"btn px-3 py-1 rounded-lg border " + (mode==="dep" ? "border-blue-500 text-blue-600 bg-blue-50" : "border-slate-200 bg-slate-50")}
@@ -163,7 +256,6 @@
             </div>
           </div>
 
-          {/* Controls */}
           <div className="grid sm:grid-cols-3 gap-4">
             <label className="text-sm">
               <div className="mb-1">Initial thickness t₀ (nm): <strong>{t0}</strong></div>
@@ -182,7 +274,6 @@
             </label>
           </div>
 
-          {/* Bars */}
           <div className="grid sm:grid-cols-2 gap-6 mt-6">
             <div>
               <div className="text-sm text-slate-600 mb-2">Initial stack</div>
@@ -201,16 +292,16 @@
           </div>
 
           <p className="text-sm text-slate-600 mt-4">
-            Computation: tᶠ = max(0, t₀ ± rate × time). This mirrors how I think about process windows when planning and debugging nanofab flows.
+            tᶠ = max(0, t₀ ± rate × time). I use this style of reasoning when planning, debugging, and iterating process flows.
           </p>
         </div>
       );
     }
 
-    // ====== (B) THIN-FILM INTERFERENCE (single film on glass, normal incidence) ======
+    // ====== (B) THIN-FILM INTERFERENCE ======
     function filmReflectanceSpectrum(n1=1.45, n2=1.5, d_nm=300) {
       const n0 = 1.0;
-      const lambdas = linspace(380, 780, 200); // nm
+      const lambdas = linspace(380, 780, 200);
       const r01 = (n0 - n1) / (n0 + n1);
       const r12 = (n1 - n2) / (n1 + n2);
 
@@ -218,10 +309,10 @@
         const beta = 2 * Math.PI * n1 * (d_nm / lambda);
         const cos2b = Math.cos(2*beta), sin2b = Math.sin(2*beta);
         const num_re = r01 + r12 * cos2b;
-        const num_im = 0     + r12 * sin2b;
+        const num_im = r12 * sin2b;
         const rr = r01 * r12;
         const den_re = 1 + rr * cos2b;
-        const den_im =     rr * sin2b;
+        const den_im = rr * sin2b;
         const den2 = den_re*den_re + den_im*den_im;
         const re = (num_re*den_re + num_im*den_im) / den2;
         const im = (num_im*den_re - num_re*den_im) / den2;
@@ -241,7 +332,7 @@
 
       return (
         <div className="card p-6" data-reveal>
-          <h3 className="text-xl font-semibold mb-4">Thin-film optics: reflectance vs wavelength</h3>
+          <h3 className="text-lg font-semibold mb-4">Thin-film optics: reflectance vs wavelength</h3>
 
           <div className="grid sm:grid-cols-3 gap-4 mb-4">
             <label className="text-sm">
@@ -273,23 +364,16 @@
           </div>
 
           <p className="text-sm text-slate-600 mt-3">
-            Normal incidence thin-film model using Fresnel coefficients (phase β = 2π n₁ d / λ). I use this type of reasoning for coatings, metasurface stacks, and optical device tuning.
+            Single-layer model at normal incidence. Useful intuition for coatings, spectral tuning, and optical stack design.
           </p>
         </div>
       );
     }
 
-    // ====== (C) CLOSED-LOOP PID (simple thermal plant) ======
+    // ====== (C) PID (simple thermal plant) ======
     function simulateThermalPID({ Kp, Ki, Kd, setpoint, tau=18, dt=0.2, tEnd=80, ambient=25, heaterGain=55 }){
-      // Simple first-order plant: dT/dt = (-(T-ambient) + heaterGain*u)/tau
-      // u in [0,1]. PID is computed on error (setpoint - T).
-      let T = ambient;
-      let integ = 0;
-      let ePrev = setpoint - T;
-      let u = 0;
-
-      const ptsT = [];
-      const ptsU = [];
+      let T = ambient, integ = 0, ePrev = setpoint - T, u = 0;
+      const ptsT = [], ptsU = [];
       const n = Math.floor(tEnd / dt);
 
       for (let i=0; i<=n; i++){
@@ -297,18 +381,12 @@
         const e = setpoint - T;
         integ += e * dt;
         const deriv = (e - ePrev) / dt;
-
-        // Scale controller to feel intuitive with sliders
         const raw = (Kp*e + Ki*integ + Kd*deriv) / 100.0;
         u = Math.max(0, Math.min(1, raw));
-
-        // plant update
         const dT = (-(T - ambient) + heaterGain*u) / tau;
         T = T + dT*dt;
-
         ptsT.push([t, T]);
         ptsU.push([t, u]);
-
         ePrev = e;
       }
       return { ptsT, ptsU };
@@ -322,11 +400,11 @@
 
       const { ptsT, ptsU } = simulateThermalPID({ Kp, Ki, Kd, setpoint });
       const polyT = toPolyline(ptsT, 600, 260, 36);
-      const polyU = toPolyline(ptsU.map(([t,u]) => [t, u*80 + 20]), 600, 260, 36); // overlay u (scaled)
+      const polyU = toPolyline(ptsU.map(([t,u]) => [t, u*80 + 20]), 600, 260, 36);
 
       return (
         <div className="card p-6" data-reveal>
-          <h3 className="text-xl font-semibold mb-4">Closed-loop control: PID temperature regulation</h3>
+          <h3 className="text-lg font-semibold mb-4">Closed-loop control: PID temperature regulation</h3>
 
           <div className="grid sm:grid-cols-4 gap-4 mb-4">
             <label className="text-sm sm:col-span-1">
@@ -358,191 +436,204 @@
               <line x1="36" y1="24"  x2="36"  y2="224" stroke="#cbd5e1"/>
               <text x="300" y="248" fontSize="10" fill="#64748b" textAnchor="middle">Time (s)</text>
               <text x="10" y="18" transform="rotate(-90,10,18)" fontSize="10" fill="#64748b">Temperature (°C)</text>
-              {/* Temperature */}
               <polyline fill="none" stroke="#2563eb" strokeWidth="2" points={polyT}/>
-              {/* Heater effort (scaled overlay, lighter) */}
               <polyline fill="none" stroke="#94a3b8" strokeWidth="2" strokeDasharray="5 5" points={polyU}/>
             </svg>
           </div>
 
           <p className="text-sm text-slate-600 mt-3">
-            I’ve used PID feedback control in lab hardware to stabilize internal temperatures using sensor feedback and tuned response for stability and settling time.
+            Feedback control with sensor-based temperature regulation (PID tuning for stability and settling behavior).
           </p>
         </div>
       );
     }
 
-    function CaseStudyCard({ title, subtitle, image, imageAlt, tags=[], kpis=[], bullets=[], outcome="", detailsTitle="More details", details=[] }){
+    function ExperienceCard({ org, role, when, tags=[], bullets=[] }){
       return (
-        <article className="card p-6" data-reveal>
-          <div className="flex items-start justify-between gap-4">
+        <div className="card p-6" data-reveal>
+          <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0">
-              <h3 className="text-lg md:text-xl font-semibold leading-snug">{title}</h3>
-              {subtitle && <p className="text-slate-600 mt-1">{subtitle}</p>}
-              <div className="flex flex-wrap gap-2 mt-3">
-                {tags.map(t => <Tag key={t}>{t}</Tag>)}
-              </div>
-              {kpis.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {kpis.map(k => <KPI key={k.label} label={k.label} value={k.value} />)}
-                </div>
-              )}
+              <div className="text-lg font-semibold leading-tight">{org}</div>
+              <div className="text-slate-700">{role}</div>
             </div>
+            <div className="text-sm text-slate-600">{when}</div>
           </div>
-
-          {image && (
-            <div className="mt-5 w-full aspect-[16/9] overflow-hidden rounded-xl border border-slate-200">
-              <img
-                src={image}
-                alt={imageAlt || title}
-                className="w-full h-full object-cover"
-                style={title.includes("view-angle") ? { objectPosition: "50% 0%" } : {}}
-                onError={(e)=>{ e.currentTarget.onerror=null; e.currentTarget.src='https://via.placeholder.com/1200x675?text=Image'; }}
-              />
-            </div>
-          )}
-
-          {bullets.length > 0 && (
-            <ul className="mt-4 space-y-2 text-slate-800 list-disc pl-5">
-              {bullets.map((b, i) => <li key={i}>{b}</li>)}
-            </ul>
-          )}
-
-          {outcome && (
-            <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4 text-slate-800">
-              <strong>Outcome: </strong>{outcome}
-            </div>
-          )}
-
-          {details.length > 0 && (
-            <details className="mt-4 rounded-xl border border-slate-200 bg-white p-4">
-              <summary className="cursor-pointer font-semibold text-slate-800">{detailsTitle}</summary>
-              <ul className="mt-3 space-y-2 text-slate-800 list-disc pl-5">
-                {details.map((d, i) => <li key={i}>{d}</li>)}
-              </ul>
-            </details>
-          )}
-        </article>
+          <div className="flex flex-wrap gap-2 mt-3">
+            {tags.map(t => <Tag key={t}>{t}</Tag>)}
+          </div>
+          <ul className="mt-4 space-y-2 text-slate-800 list-disc pl-5">
+            {bullets.map((b,i)=> <li key={i}>{b}</li>)}
+          </ul>
+        </div>
       );
     }
 
     function Portfolio(){
-      // Content is intentionally broad (usable for many applications),
-      // but ordered to highlight: building, repeatability, smart materials, and devices.
-      const CASE_STUDIES = [
+      // --- CONTENT ---
+      const FEATURED = [
         {
           title: "Dynamic view‑angle‑controlled optical display & encryption (wafer‑scale)",
-          subtitle: "A smart‑material / nanofabrication approach to selective visibility and information security.",
-          image: IMG_BADGE,
-          imageAlt: "ID badge concept illustrating selective visibility for encrypted information",
-          tags: ["Smart materials", "Optics", "Nanofabrication", "Device characterization", "IP"],
-          kpis: [
-            { label: "Status", value: "Patent filed" },
-            { label: "Writing", value: "Manuscripts in prep" },
-            { label: "Scale", value: "Wafer‑scale" },
+          oneLiner: "Selective-visibility optics for information security and anti-distraction displays, combining nanofabrication with optical materials (including quantum dots).",
+          tags: ["Smart materials", "Photonics", "Nanofabrication", "Optical characterization", "IP + manuscripts"],
+          media: [
+            { src: IMG_BADGE, alt:"ID badge concept", caption:"ID‑badge concept: selective visibility for encrypted information", pos:"50% 0%", fallback: IMG_BADGE },
+            { src: IMG_CAR, alt:"Automotive anti‑distraction display concept", caption:"Anti‑distraction automotive display concept (controlled visibility)", pos:"50% 50%", fallback: IMG_CAR },
+            { src: IMG_VIALS, alt:"Quantum dots in vials", caption:"Quantum dots (materials platform used within the display stack)", pos:"50% 55%", fallback: IMG_VIALS },
           ],
-          bullets: [
-            "Lead author & inventor (co‑lead with collaborator Raphael Kay); translated a lab concept into an end‑to‑end device narrative suitable for IP and publication.",
-            "Designed wafer layouts and process flows; executed nanofab and characterized optical behavior with a build‑measure‑iterate loop.",
-            "Positioned against LCD‑style approaches by benchmarking key tradeoffs (view‑angle control, contrast, readability, leakage).",
+          sections: [
+            {
+              title: "Key contributions",
+              bullets: [
+                "Lead author & inventor; shaped a device story that connects fabrication parameters to optical performance and use-cases.",
+                "Built a measurement-and-iteration loop: wafer design → process execution → characterization → performance tuning.",
+                "Benchmarked against LCD-style approaches using view-angle control as a primary system constraint and differentiator.",
+              ],
+            },
+            {
+              title: "Technology elements",
+              bullets: [
+                "Wafer-scale micro/nanofabrication on silicon; thin-film stacks and microstructured optics.",
+                "Optical modeling and characterization to diagnose leakage paths and visibility windows.",
+                "Material integration (quantum dots and optical films) to tune spectral/visual behavior.",
+              ],
+            },
           ],
-          outcome: "New architecture for view‑angle‑selective displays and optical encryption; IP filed and papers in progress.",
-          detailsTitle: "What I did (high level)",
-          details: [
-            "Wafer layout (KLayout) and nanofab process planning; iteration on process windows and yield.",
-            "Optical characterization and modeling to connect fabrication parameters to device performance.",
-            "Drafted invention disclosures and supported prior‑art review with counsel (non‑confidential).",
-          ],
+          outcome: "Patent filed; manuscripts in preparation; portfolio of concepts spanning secure ID and anti-distraction display architectures.",
         },
         {
-          title: "Smart radiative windows: dynamic thermal / optical control for energy savings",
-          subtitle: "Nanoparticle + thin‑film stacks to tune visible–IR transparency and radiative transfer.",
-          image: IMG_LAB_BENCH,
-          imageAlt: "Lab bench setup for optical/thermal experiments",
-          tags: ["Thermal management", "Thin films", "Nanomaterials", "UV‑Vis / FTIR", "Modeling"],
-          kpis: [
-            { label: "Result (lab‑scale)", value: "Up to ~30% energy reduction" },
-            { label: "Modes", value: "Radiative cooling + specularity tuning" },
+          title: "Smart radiative windows: dynamic thermal / optical control",
+          oneLiner: "Nanoparticle + thin-film stacks that tune visible–IR response and radiative transfer for energy-relevant thermal management.",
+          tags: ["Thermal management", "Thin films", "Nanomaterials", "UV‑Vis / FTIR", "Modeling + experiments"],
+          media: [
+            { src: IMG_LAB_BENCH, alt:"Lab bench opto-thermal experiments", caption:"Opto-thermal experiments and device characterization", pos:"50% 50%", fallback: IMG_LAB_BENCH },
           ],
-          bullets: [
-            "Developed physics‑based optical and multimode heat‑transfer models (MATLAB) to characterize device behavior.",
-            "Ran opto‑thermal experiments quantifying heat flux and optical control, including radiative cooling and specularity tuning.",
-            "Mentored and supported undergraduate thesis work on liquid windows that modulate radiation for energy savings.",
+          sections: [
+            {
+              title: "Key contributions",
+              bullets: [
+                "Developed physics-based optical and multimode heat-transfer models (MATLAB) to interpret device behavior.",
+                "Ran opto-thermal experiments quantifying heat flux, radiative cooling, and specularity control.",
+                "Mentored and supported undergraduate thesis work on liquid windows that modulate radiation for energy savings.",
+              ],
+            },
+            {
+              title: "Characterization & results (lab-scale)",
+              bullets: [
+                "UV‑Vis/FTIR spectral measurements for absorbance/transparency and optical control.",
+                "Observed up to ~30% energy reduction on window-device experiments (depending on configuration).",
+              ],
+            },
           ],
-          outcome: "Demonstrated dynamic radiative control concepts for building‑scale thermal/optical management.",
-          detailsTitle: "Methods and device elements",
-          details: [
-            "Nanoparticles & thin films to tune spectral response (visible–IR).",
-            "Spectral characterization with UV‑Vis and FTIR (absorbance/transparency).",
-            "Experimental + modeling loop to identify high‑leverage parameters and constraints.",
-          ],
-        },
-        {
-          title: "Microstructured optics: high‑aspect‑ratio gratings and replicated microfeatures",
-          subtitle: "From cleanroom patterning to polymer replication for optical surfaces and device components.",
-          image: IMG_VIALS,
-          imageAlt: "Materials samples in vials (polymer/nanomaterials workflow)",
-          tags: ["Microfabrication", "Soft lithography", "Metrology", "Diffraction gratings"],
-          bullets: [
-            "Fabricated high‑aspect‑ratio diffraction gratings and micro‑structured optics; inspected with profilometry and ellipsometry.",
-            "Performed PDMS soft lithography (O₂ plasma, silanization, mixing/degassing, curing) to replicate microfins, gratings, and Fresnel patterns.",
-            "Used UV‑cure / heat‑cure epoxies and solvent bonding of PMMA to assemble and encapsulate microstructured components.",
-          ],
-          outcome: "Repeatable microfabrication and replication workflows for optical surfaces and device prototypes.",
-        },
-        {
-          title: "Nanorobotics‑inspired capstone: Janus particles for targeted clot drug delivery",
-          subtitle: "A targeted‑delivery design project framed as microscale “nanorobotics” systems engineering.",
-          image: IMG_CAR,
-          imageAlt: "Concept image; controlled-visibility display in automotive context (placeholder visual)",
-          tags: ["Nanobiotechnology", "Targeted delivery", "Design leadership", "Systems thinking"],
-          bullets: [
-            "Project lead for a 4th‑year design team developing Janus‑particle concepts for targeted drug delivery to blood clots.",
-            "Defined requirements and evaluation criteria (targeting, transport, release constraints) and organized the build/test plan at a high level.",
-            "Framed the system as a controllable microdevice (navigation/activation constraints, safety, manufacturability).",
-          ],
-          outcome: "Clear engineering roadmap for translating a nanomaterials concept into a testable, safety‑aware delivery system.",
-        },
-        {
-          title: "Design competition submission: scalable SLIPS coating for programmable drug delivery",
-          subtitle: "Contributor and listed team member on the official BMES design competition submission.",
-          image: IMG_GROUP,
-          imageAlt: "Lab group photo (teamwork/collaboration visual)",
-          tags: ["Medical devices", "Surface engineering", "Programmable delivery", "Design documentation"],
-          bullets: [
-            "Contributed to the team submission and design narrative; collaborated across experimentation, analysis, and scientific discussion.",
-            "Worked within real constraints (biocompatibility, coatings, manufacturability) typical of early device translation.",
-          ],
-          outcome: "Submission delivered with a cohesive technical story and engineering rationale.",
+          outcome: "Demonstrated dynamic radiative-control concepts with a clear path from modeling → measurements → device decisions.",
         },
       ];
 
-      const TOOLBOX = [
+      const MORE_WORK = [
         {
-          title: "Smart materials & device building",
+          title: "Microstructured optics & replication workflows",
+          oneLiner: "High-aspect-ratio gratings and replicated microfeatures for optical surfaces and device components.",
+          tags: ["Microfabrication", "Soft lithography", "Metrology", "Diffraction gratings"],
+          media: [
+            // Prefer a dedicated optics photo if you add it; otherwise fall back to lab bench.
+            { src: IMG_GRATING, alt:"Microstructured optics / grating", caption:"Suggested: add a grating/microstructure image (images/grating.jpg)", pos:"50% 50%", fallback: IMG_LAB_BENCH },
+            { src: IMG_CLEANROOM, alt:"Cleanroom / wafer", caption:"Suggested: add a cleanroom/wafer image (images/cleanroom.jpg)", pos:"50% 50%", fallback: IMG_LAB_BENCH },
+          ],
+          sections: [
+            {
+              title: "Key contributions",
+              bullets: [
+                "Designed wafers in KLayout; executed cleanroom process flows (MLA lithography, RIE, PVD/CVD).",
+                "Fabricated high-aspect-ratio gratings and micro-structured optics; verified with profilometry and ellipsometry.",
+                "PDMS soft lithography and micro-replication (O₂ plasma, silanization, curing) for microfins, gratings, Fresnel patterns.",
+              ],
+            },
+          ],
+          outcome: "Repeatable microfabrication and replication toolkit spanning hard (wafer) and soft (polymer) processes.",
+        },
+        {
+          title: "Nanorobotics-inspired capstone: Janus particles for targeted clot drug delivery",
+          oneLiner: "A design-lead project framing Janus particles as controllable microdevices for targeted delivery and activation in vascular environments.",
+          tags: ["Nanobiotechnology", "Targeted delivery", "Design leadership", "Systems constraints"],
+          media: [
+            { src: IMG_JANUS, alt:"Janus particles concept", caption:"Suggested: add a Janus/targeted-delivery diagram (images/janus.jpg)", pos:"50% 50%", fallback: IMG_VIALS },
+            { src: IMG_VIALS, alt:"Quantum dots in vials (placeholder for nanoscale materials)", caption:"Placeholder visual for nanoscale materials (swap with a Janus image if available)", pos:"50% 55%", fallback: IMG_VIALS },
+          ],
+          sections: [
+            {
+              title: "Key contributions",
+              bullets: [
+                "Led a 4th-year design team; defined requirements and evaluation criteria (targeting, transport, release, safety).",
+                "Structured the project around engineering constraints and testability rather than purely theoretical performance.",
+                "Connected materials choices to system-level behavior in blood-flow-like environments (activation and release constraints).",
+              ],
+            },
+          ],
+          outcome: "Clear engineering roadmap for translating a nanomaterials concept into a testable targeted-delivery system.",
+        },
+        {
+          title: "Design submission: scalable SLIPS coating for programmable drug delivery",
+          oneLiner: "Contributor and listed team member on the official BMES design competition submission; surface engineering + device translation story.",
+          tags: ["Medical devices", "Surface engineering", "Programmable delivery", "Design documentation"],
+          media: [
+            // User requested top-anchored crop for this photo
+            { src: IMG_GROUP, alt:"Team / lab group photo", caption:"Team submission (top-anchored crop)", pos:"50% 0%", fallback: IMG_GROUP },
+          ],
+          sections: [
+            {
+              title: "Key contributions",
+              bullets: [
+                "Contributed to the submission narrative and technical rationale; collaborated across experiments, analysis, and scientific discussion.",
+                "Worked within real device constraints (biocompatibility, coating durability, manufacturability) typical of early translation.",
+              ],
+            },
+          ],
+          outcome: "Submission delivered with a cohesive technical story linking surface engineering to programmable delivery.",
+        },
+      ];
+
+      const OUTPUTS = [
+        { title: "Patent filed — view‑angle‑controlled display/encryption optics", detail: "Inventor; claims development + prior-art review support (non-confidential)." },
+        { title: "Lead-author manuscript in preparation — optical display/encryption architecture", detail: "Wafer-scale device narrative, characterization, and positioning vs LCD approaches." },
+        { title: "Co-author on additional manuscripts in preparation", detail: "Nanomaterials / photonic-fluidic workstreams (in preparation)." },
+        { title: "BMES design competition submission — scalable SLIPS coating for programmable drug delivery", detail: "Listed contributor; design documentation and technical story." },
+        { title: "Mentorship — supported undergraduate thesis work on energy-relevant smart windows", detail: "Guided experimental work and technical framing." },
+      ];
+
+      const CAPABILITIES = [
+        {
+          title: "Smart materials & active optics",
           icon: "🧠",
           bullets: [
-            "Stimulus‑responsive materials (liquid crystals / active microstructures) and device‑level performance framing.",
-            "Photonic‑fluidic devices, optical display architectures, and competitive benchmarking mindset.",
-            "Polymers and elastomers: PDMS formulation/replication; epoxy encapsulation; PMMA solvent bonding.",
+            "Stimulus-responsive materials (liquid crystals / active microstructures) with device-level performance framing.",
+            "Optical display architectures, selective visibility, and anti-distraction concepts; competitive benchmarking mindset.",
+            "Nanoparticle + thin-film stacks for spectral and radiative-property tuning (visible–IR).",
           ],
         },
         {
-          title: "Rapid prototyping & repeatability",
-          icon: "🛠️",
-          bullets: [
-            "SolidWorks for parts, fixtures, and device assemblies; tolerance‑aware iteration for fast build cycles.",
-            "Multi‑material 3D printing workflows; fixture/tooling design to improve alignment and repeatability.",
-            "SOPs and build documentation to reduce iteration friction and enable reproducible assembly & validation.",
-          ],
-        },
-        {
-          title: "Nanofab, characterization, and analysis",
+          title: "Micro/nanofabrication & metrology",
           icon: "🔬",
           bullets: [
-            "Wafer design (KLayout) and cleanroom flows: MLA lithography, RIE, PVD/CVD thin films.",
-            "Metrology & characterization: profilometry, ellipsometry, UV‑Vis/FTIR; SEM/AFM; Raman/UV‑Vis for CNTs.",
-            "Modeling & data: MATLAB physics models; Python/SQL/R for analysis and automation.",
+            "Wafer layout (KLayout) and cleanroom flows: MLA lithography, RIE, PVD/CVD thin films.",
+            "Profilometry, ellipsometry, UV‑Vis, FTIR; SEM/AFM; Raman spectroscopy.",
+            "Microstructured optics and high-aspect-ratio features; process iteration and yield-aware thinking.",
+          ],
+        },
+        {
+          title: "Device testing, modeling, and control",
+          icon: "📈",
+          bullets: [
+            "Physics-based optical + heat-transfer models (MATLAB) to interpret measurements and guide design.",
+            "Opto-thermal experiments (radiative cooling, heat flux, specularity control) with analysis pipelines.",
+            "Closed-loop PID control for temperature regulation using sensor feedback (tuned for stability).",
+          ],
+        },
+        {
+          title: "Engineering build + documentation",
+          icon: "🛠️",
+          bullets: [
+            "SolidWorks parts, fixtures, and device assemblies; multi-material 3D printing workflows.",
+            "Hands-on circuit bring-up and troubleshooting with lab instrumentation (scope/DMM/power supply).",
+            "SOPs and assembly documentation to make builds transferable, not fragile.",
           ],
         },
       ];
@@ -552,11 +643,11 @@
           org: "Harvard SEAS — Aizenberg Lab",
           role: "Permanent Part‑Time Researcher",
           when: "May 2025 – Present",
-          tags: ["Smart materials", "Photonics", "IP & writing"],
+          tags: ["Smart materials", "Photonics", "IP + writing"],
           bullets: [
-            "Translate photonic‑fluidic and smart‑material device concepts into IP and publication‑ready narratives.",
-            "Lead author on view‑angle‑controlled display/encryption; co‑author on additional manuscripts in preparation.",
-            "Support invention documentation, prior‑art review, and experimental planning (non‑confidential).",
+            "Translate smart-material device concepts into IP and publication-ready narratives.",
+            "Lead author on view-angle-controlled display/encryption optics; co-author on additional manuscripts in preparation.",
+            "Support invention documentation and experimental planning (non-confidential).",
           ],
         },
         {
@@ -565,41 +656,39 @@
           when: "Sep 2024 – May 2025",
           tags: ["Nanofab", "Metrology", "Opto‑thermal"],
           bullets: [
-            "Designed wafers in KLayout and executed end‑to‑end cleanroom nanofab flows (MLA lithography, RIE, PVD/CVD).",
-            "Built microstructured optics and high‑aspect‑ratio gratings; inspected with profilometry and ellipsometry.",
-            "Tuned visible–IR transparency with nanoparticles and thin films; measured spectra via UV‑Vis/FTIR.",
-            "Ran opto‑thermal experiments (radiative cooling, specularity control) and developed MATLAB models to interpret results.",
+            "Designed wafers in KLayout and executed cleanroom nanofab flows (MLA lithography, RIE, PVD/CVD).",
+            "Fabricated microstructured optics and gratings; inspected with profilometry and ellipsometry.",
+            "Tuned visible–IR transparency with nanoparticles and thin films; measured with UV‑Vis/FTIR.",
           ],
         },
         {
           org: "Syensqo",
           role: "Incoming Research Associate Intern (Accepted)",
           when: "Upcoming (4 months)",
-          tags: ["Delivery systems", "Formulation", "Scale‑aware R&D"],
+          tags: ["Biomolecular assemblies", "Delivery platforms", "Prototype-driven R&D"],
           bullets: [
-            "Biomolecular assemblies and next‑gen delivery systems work, focused on translating early concepts into performance‑driven prototypes with scale awareness.",
+            "Biomolecular assemblies and next-gen delivery platforms; translating early concepts into performance-driven prototypes with scale awareness.",
           ],
         },
         {
           org: "Quantum Nano Centre — University of Waterloo",
-          role: "Research / Materials Characterization",
+          role: "Materials characterization & polymer/nanomaterials work",
           when: "Lab & project work",
           tags: ["Polymers", "Nanomaterials", "Characterization"],
           bullets: [
-            "Emulsion polymerization of polystyrene with particle‑size control and characterization (DLS, AFM).",
-            "Mechanical/thermal characterization across polymer blends and fillers (tensile, impact, DSC, TGA) with technical reporting.",
-            "SEM imaging of ultrathin nanogold wires and spectroscopy analysis of carbon nanotubes (Raman, UV‑Vis).",
-            "RAFT polymerization exposure and GPC characterization workflows (as applicable).",
+            "Emulsion polymerization of polystyrene with particle-size control and characterization (DLS, AFM).",
+            "Mechanical/thermal characterization (tensile, impact, DSC, TGA) and technical reporting.",
+            "SEM imaging and spectroscopy analysis (Raman/UV‑Vis for CNTs).",
           ],
         },
         {
           org: "City of Hamilton + Government of Canada",
-          role: "Software / Data + IT Internships",
+          role: "Software/Data + IT internships",
           when: "2023 – 2024",
           tags: ["Automation", "Systems", "Data"],
           bullets: [
-            "Automated dashboards and analysis workflows (Python, SQL, R, Power BI); built tools for large multi‑source datasets.",
-            "Hands‑on troubleshooting and deployment support for enterprise hardware and software systems.",
+            "Automation and analysis workflows (Python, SQL, R, Power BI) for multi-source datasets.",
+            "Hardware troubleshooting and deployment support for enterprise systems.",
           ],
         },
       ];
@@ -622,64 +711,52 @@
               </div>
 
               <nav className="hidden sm:flex items-center gap-2">
-                <a href="#summary" className="px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100">Summary</a>
-                <a href="#fit" className="px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100">Fit</a>
-                <a href="#case-studies" className="px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100">Case studies</a>
-                <a href="#toolbox" className="px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100">Toolbox</a>
+                <a href="#work" className="px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100">Work</a>
+                <a href="#outputs" className="px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100">Outputs</a>
+                <a href="#capabilities" className="px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100">Capabilities</a>
                 <a href="#experience" className="px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100">Experience</a>
+                <a href="#notes" className="px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100">Notes</a>
                 <a href="#contact" className="px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100">Contact</a>
               </nav>
             </div>
           </header>
 
           {/* HERO */}
-          <Section id="summary" className="pt-20 pb-10">
+          <Section className="pt-20 pb-12" id="top">
             <div className="grid lg:grid-cols-12 gap-12 items-start">
               {/* LEFT */}
               <div className="lg:col-span-7 flex flex-col gap-6">
                 <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.15] typewrite" data-typewrite data-type-speed="26">
-                  Smart materials → devices: rapid build, measurement, and iteration
+                  Smart materials + microfabrication for device-scale outcomes
                 </h1>
 
                 <div className="card p-8" data-reveal>
                   <p className="text-slate-700 text-[1.05rem] leading-8">
-                    I’m a Nanotechnology Engineering student building at the intersection of <strong>smart materials</strong>,
-                    <strong> nanofabrication</strong>, and <strong>prototype hardware</strong>. I work from first principles through
-                    CAD/fixtures and repeatable assembly, cleanroom process execution, and optical/thermal characterization—then
-                    translate results into <strong>IP, papers, and engineering-ready documentation</strong>.
+                    I build and study <strong>stimulus-responsive materials</strong> and <strong>micro/nanofabricated devices</strong>—
+                    spanning active optics, thermal management, and nanoscale materials integration. My work is hands-on:
+                    <strong> wafer design and cleanroom execution</strong>, optical/thermal characterization and modeling, and
+                    converting results into <strong>patents, manuscripts, and clear engineering documentation</strong>.
                   </p>
+
                   <div className="mt-5 flex flex-wrap gap-2">
-                    {["Smart materials & actuation", "Rapid prototyping & fixtures", "Nanofab + metrology", "Optics + heat transfer", "Closed-loop control"].map(t => (
+                    {["Active optics & liquid crystals", "Thin films + nanomaterials", "Cleanroom nanofab", "Metrology + spectroscopy", "Optics + heat transfer", "Closed-loop control"].map(t => (
                       <span key={t} className="text-sm px-3 py-1 rounded-full border border-slate-200 bg-slate-50 text-slate-700 will-reveal">{t}</span>
                     ))}
                   </div>
-                </div>
 
-                <div className="grid sm:grid-cols-2 gap-4" data-hover-grid>
-                  <div className="card p-5 flex items-center gap-4" data-reveal>
-                    <span className="text-2xl" aria-hidden="true">🎓</span>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-semibold">Honours Nanotechnology Engineering</div>
-                      <div className="text-sm text-slate-600">University of Waterloo</div>
-                    </div>
-                    <img src={LOGO_WATERLOO} alt="University of Waterloo" className="h-9 w-auto" />
-                  </div>
-                  <div className="card p-5" data-reveal>
-                    <div className="text-slate-600 text-sm">Now</div>
-                    <div className="font-semibold mt-1">Looking for high‑ownership roles on hard‑tech teams</div>
-                    <div className="text-sm text-slate-600 mt-2">
-                      I’m strongest where smart materials meet devices: design → fabricate → characterize → iterate → document.
-                    </div>
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    <ButtonLink href={LINKS.resumePdf} variant="primary">Resume (PDF)</ButtonLink>
+                    <ButtonLink href={LINKS.github} variant="secondary">GitHub</ButtonLink>
+                    <ButtonLink href={LINKS.linkedin} variant="secondary">LinkedIn</ButtonLink>
+                    <ButtonLink href={LINKS.email} variant="secondary">Email</ButtonLink>
                   </div>
                 </div>
 
-                <div className="flex flex-wrap gap-3" data-reveal>
-                  <QuickLink href="#case-studies">View case studies</QuickLink>
-                  <QuickLink href="#contact">Get in touch</QuickLink>
-                  {/* Optional: add a resume PDF file in your repo and update the href */}
-                  <a className="btn inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800" href="files/Alden_Panicker_Resume.pdf">
-                    Resume (PDF)
-                  </a>
+                <div className="grid sm:grid-cols-4 gap-3" data-hover-grid>
+                  <div className="card p-4" data-reveal><StatPill label="IP" value="Patent filed" /></div>
+                  <div className="card p-4" data-reveal><StatPill label="Writing" value="Lead-author + co-author manuscripts" /></div>
+                  <div className="card p-4" data-reveal><StatPill label="Nanofab" value="Lithography • etch • deposition" /></div>
+                  <div className="card p-4" data-reveal><StatPill label="Devices" value="Optical + thermal systems" /></div>
                 </div>
               </div>
 
@@ -695,7 +772,7 @@
 
                 <div className="card p-6 space-y-4" data-reveal>
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-600">Latest research environment</span>
+                    <span className="text-slate-600">Current research environment</span>
                     <span className="text-xs px-2 py-1 rounded-full border border-slate-200 bg-slate-50">Harvard SEAS</span>
                   </div>
                   <div className="font-semibold flex items-center gap-2">
@@ -703,98 +780,89 @@
                     <span>Aizenberg Lab</span>
                   </div>
                   <ul className="space-y-2 text-slate-700 list-disc pl-5">
-                    <li>Lead author on view‑angle‑controlled optical display/encryption; patent filed; manuscripts in preparation.</li>
-                    <li>Designed and fabricated micro-/nano‑structured optics; tuned visible–IR transparency with thin films and nanoparticles.</li>
-                    <li>Quantified radiative cooling and specularity control; executed end‑to‑end cleanroom flows and modeling.</li>
+                    <li>Lead author on view-angle-controlled optical display/encryption; patent filed; manuscripts in preparation.</li>
+                    <li>Nanofab + characterization for microstructured optics and thin-film/nanomaterial stacks.</li>
+                    <li>Radiative window experiments: optical control + heat-transfer behavior (modeling + measurements).</li>
                   </ul>
+                </div>
+
+                <div className="card p-5 flex items-center gap-4" data-reveal>
+                  <span className="text-2xl" aria-hidden="true">🎓</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold">Honours Nanotechnology Engineering</div>
+                    <div className="text-sm text-slate-600">University of Waterloo</div>
+                  </div>
+                  <img src={LOGO_WATERLOO} alt="University of Waterloo" className="h-9 w-auto" />
                 </div>
               </aside>
             </div>
           </Section>
 
-          {/* FIT */}
-          <Section id="fit" title="What I bring to a founding hardware team" className="py-14">
-            <div className="grid lg:grid-cols-12 gap-10 items-start" data-hover-grid>
-              <div className="lg:col-span-7 card p-6" data-reveal>
-                <h3 className="text-xl font-semibold mb-3">Builder mindset + smart materials depth</h3>
-                <p className="text-slate-700 leading-7">
-                  My best work happens in fast iteration loops: <strong>design → build → measure → debug → document → repeat</strong>.
-                  I’m comfortable with ambiguity, and I like turning “cool science” into devices that can be fabricated, validated, and scaled.
-                </p>
-                <ul className="mt-4 space-y-2 text-slate-800 list-disc pl-5">
-                  <li><strong>Rapid prototyping & fixtures:</strong> SolidWorks parts, fixtures, and device assemblies; multi‑material 3D printing; tolerance‑aware iteration.</li>
-                  <li><strong>Hardware bring‑up & debugging:</strong> structured troubleshooting with lab instrumentation; validation checklists; clean documentation.</li>
-                  <li><strong>Smart materials & actuation concepts:</strong> LC/active microstructures (stimulus response) and soft‑material replication workflows.</li>
-                  <li><strong>Repeatability:</strong> SOPs + build/test checklists to make prototypes reproducible and transferable.</li>
-                </ul>
-              </div>
-
-              <div className="lg:col-span-5 space-y-6">
-                <div className="card p-6" data-reveal>
-                  <h3 className="font-semibold mb-2">Signal strengths</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {["Closed‑loop control (PID)", "Fixture/tooling design", "Nanofab process execution", "Optics + thermal experiments", "Metrology + spectroscopy", "IP + technical writing"].map(t => (
-                      <Tag key={t}>{t}</Tag>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="card p-6" data-reveal>
-                  <h3 className="font-semibold mb-2">How I work</h3>
-                  <ol className="mt-3 space-y-2 text-slate-800 list-decimal pl-5">
-                    <li>Define success metrics and failure modes (what can break?).</li>
-                    <li>Prototype fast with fixtures/tooling that reduce noise.</li>
-                    <li>Measure + debug systematically; record decisions.</li>
-                    <li>Write SOPs so the work can be repeated by others.</li>
-                  </ol>
-                </div>
-              </div>
-            </div>
-          </Section>
-
-          {/* CASE STUDIES */}
-          <Section id="case-studies" title="Case studies" className="py-14">
+          {/* WORK */}
+          <Section
+            id="work"
+            title="Selected work"
+            subtitle="A few representative projects. Each one is written to show the device story: what it does, why it matters, and how it’s engineered."
+            className="py-14"
+          >
             <div className="grid lg:grid-cols-2 gap-10" data-hover-grid>
-              {CASE_STUDIES.map(cs => <CaseStudyCard key={cs.title} {...cs} />)}
+              {FEATURED.map(p => <CaseStudy key={p.title} {...p} />)}
+            </div>
+
+            <div className="mt-10 grid lg:grid-cols-3 gap-10" data-hover-grid>
+              {MORE_WORK.map(p => <CaseStudy key={p.title} {...p} />)}
             </div>
           </Section>
 
-          {/* INTERACTIVE */}
-          <Section id="simulations" title="Interactive engineering notes" className="py-14">
-            <div className="grid lg:grid-cols-3 gap-10" data-hover-grid>
-              <DepositionEtchCard />
-              <ThinFilmCard />
-              <PIDCard />
+          {/* OUTPUTS */}
+          <Section
+            id="outputs"
+            title="Research outputs & contributions"
+            subtitle="A compact summary of publication/IP direction and cross-team contributions."
+            className="py-14"
+          >
+            <div className="card p-6" data-reveal>
+              <ul className="space-y-3 text-slate-800 list-disc pl-5">
+                {OUTPUTS.map((o,i)=> (
+                  <li key={i}>
+                    <strong>{o.title}</strong>
+                    <div className="text-sm text-slate-600 mt-1">{o.detail}</div>
+                  </li>
+                ))}
+              </ul>
             </div>
           </Section>
 
-          {/* TOOLBOX */}
-          <Section id="toolbox" title="Toolbox" className="py-14">
-            <div className="grid lg:grid-cols-3 gap-10" data-hover-grid>
-              {TOOLBOX.map(b => (
-                <div key={b.title} className="card p-6" data-reveal>
+          {/* CAPABILITIES */}
+          <Section
+            id="capabilities"
+            title="Capabilities"
+            subtitle="A practical toolkit spanning active materials, fabrication, measurement, and device reasoning (not just keywords)."
+            className="py-14"
+          >
+            <div className="grid lg:grid-cols-2 gap-10" data-hover-grid>
+              {CAPABILITIES.map(c => (
+                <div key={c.title} className="card p-6" data-reveal>
                   <h3 className="text-lg font-semibold flex items-center gap-2">
-                    <span aria-hidden>{b.icon}</span> {b.title}
+                    <span aria-hidden>{c.icon}</span> {c.title}
                   </h3>
                   <ul className="mt-3 space-y-2 text-slate-800 list-disc pl-5">
-                    {b.bullets.map((x,i)=> <li key={i}>{x}</li>)}
+                    {c.bullets.map((b,i)=> <li key={i}>{b}</li>)}
                   </ul>
                 </div>
               ))}
             </div>
 
             <div className="card p-6 mt-10" data-reveal>
-              <h3 className="text-lg font-semibold mb-2">Additional techniques I’ve used</h3>
+              <h3 className="text-lg font-semibold mb-2">Materials + characterization toolkit</h3>
               <div className="grid md:grid-cols-2 gap-4 text-slate-800">
                 <ul className="space-y-2 list-disc pl-5">
-                  <li>Profilometry, ellipsometry, UV‑Vis, FTIR; SEM, AFM; Raman spectroscopy</li>
-                  <li>Mechanical testing (tensile, impact) and thermal analysis (DSC, TGA)</li>
-                  <li>Emulsion polymerization; particle sizing and surface characterization</li>
+                  <li>Polymers: emulsion polymerization; PDMS micro-replication; epoxy encapsulation; PMMA bonding</li>
+                  <li>Thermal/mechanical: DSC, TGA, tensile and impact testing; structure-property reporting</li>
                 </ul>
                 <ul className="space-y-2 list-disc pl-5">
-                  <li>PDMS soft lithography; micro‑replication with epoxies; PMMA bonding</li>
-                  <li>MATLAB physics modeling; Python/SQL/R automation and analysis</li>
-                  <li>Cleanroom process execution and iteration (litho/etch/deposition)</li>
+                  <li>Optical + nanoscale: UV‑Vis, FTIR, ellipsometry, profilometry; SEM, AFM; Raman spectroscopy</li>
+                  <li>Analysis: MATLAB modeling; Python/SQL/R automation & visualization</li>
                 </ul>
               </div>
             </div>
@@ -803,44 +871,42 @@
           {/* EXPERIENCE */}
           <Section id="experience" title="Experience" className="py-14">
             <div className="grid gap-8" data-hover-grid>
-              {EXPERIENCE.map((e) => (
-                <div key={e.org + e.role} className="card p-6" data-reveal>
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <div className="text-lg font-semibold leading-tight">{e.org}</div>
-                      <div className="text-slate-700">{e.role}</div>
-                    </div>
-                    <div className="text-sm text-slate-600">{e.when}</div>
-                  </div>
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {e.tags.map(t => <Tag key={t}>{t}</Tag>)}
-                  </div>
-                  <ul className="mt-4 space-y-2 text-slate-800 list-disc pl-5">
-                    {e.bullets.map((b,i)=> <li key={i}>{b}</li>)}
-                  </ul>
-                </div>
-              ))}
+              {EXPERIENCE.map((e) => <ExperienceCard key={e.org + e.role} {...e} />)}
+            </div>
+          </Section>
+
+          {/* NOTES */}
+          <Section
+            id="notes"
+            title="Interactive notes"
+            subtitle="Small, self-contained demos that reflect how I think about device physics and control."
+            className="py-14"
+          >
+            <div className="grid lg:grid-cols-3 gap-10" data-hover-grid>
+              <DepositionEtchCard />
+              <ThinFilmCard />
+              <PIDCard />
             </div>
           </Section>
 
           {/* CONTACT */}
           <footer id="contact" className="border-t border-slate-200 bg-white/60">
             <div className="max-w-6xl mx-auto px-6 py-12">
-              <h2 className="text-2xl font-bold mb-8 md:mb-10 typewrite" data-typewrite data-type-speed="22">Contact</h2>
+              <h2 className="text-2xl font-bold mb-8 md:mb-10 section-title typewrite" data-typewrite data-type-speed="22">Contact</h2>
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="card p-6" data-reveal>
                   <h3 className="font-semibold mb-2">Email</h3>
                   <p className="text-slate-700">Best way to reach me:</p>
                   <a className="btn inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-blue-700 hover:text-blue-800 mt-4"
-                    href="mailto:aa2panic@uwaterloo.ca">aa2panic@uwaterloo.ca</a>
+                    href={LINKS.email}>aa2panic@uwaterloo.ca</a>
                 </div>
                 <div className="card p-6" data-reveal>
                   <h3 className="font-semibold mb-2">Links</h3>
                   <ul className="space-y-2 text-slate-700">
-                    <li><a className="text-blue-700 hover:underline" href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a> <span className="text-slate-500">(update with your profile link)</span></li>
-                    <li><a className="text-blue-700 hover:underline" href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn</a> <span className="text-slate-500">(update with your profile link)</span></li>
-                    <li><a className="text-blue-700 hover:underline" href="files/Alden_Panicker_Resume.pdf">Resume (PDF)</a> <span className="text-slate-500">(place in /files)</span></li>
+                    <li><a className="text-blue-700 hover:underline" href={LINKS.github} target="_blank" rel="noreferrer">GitHub</a> <span className="text-slate-500">(update URL if needed)</span></li>
+                    <li><a className="text-blue-700 hover:underline" href={LINKS.linkedin} target="_blank" rel="noreferrer">LinkedIn</a> <span className="text-slate-500">(update URL if needed)</span></li>
+                    <li><a className="text-blue-700 hover:underline" href={LINKS.resumePdf}>Resume (PDF)</a> <span className="text-slate-500">(place in /files)</span></li>
                   </ul>
                 </div>
               </div>
@@ -859,18 +925,18 @@
     (function(){
       const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // 1) Hover expand neighbor-nudge for any [data-hover-grid]
+      // Neighbor nudge on hover for any [data-hover-grid]
       function setupHoverGrids(){
         const grids = document.querySelectorAll('[data-hover-grid]');
         grids.forEach(grid => {
-          const items = Array.from(grid.querySelectorAll('.card'));
+          const items = Array.from(grid.querySelectorAll('.card, figure'));
           let hovered = null; let raf = null;
           const reset = () => items.forEach(el => { el.classList.remove('moved-by-hover'); el.style.removeProperty('--shift-x'); el.style.removeProperty('--shift-y'); });
           const update = () => {
             if (prefersReduced || !hovered) return;
             const r = hovered.getBoundingClientRect();
             const hx = r.left + r.width/2, hy = r.top + r.height/2;
-            const push = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sibling-shift')) || 12;
+            const push = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sibling-shift')) || 10;
             items.forEach(el => {
               if (el===hovered) return;
               const b = el.getBoundingClientRect();
@@ -893,7 +959,7 @@
         });
       }
 
-      // 2) Scroll reveal — auto-mark typical elements if not explicitly flagged
+      // Scroll reveal
       function setupReveal(){
         const candidates = document.querySelectorAll('.card, .btn, h1, h2, [data-reveal], .will-reveal');
         candidates.forEach(el=>{
@@ -934,13 +1000,13 @@
         }, 600);
       }
 
-      // 3) Typewriter for headings with [data-typewrite]
+      // Typewriter headings with [data-typewrite]
       function setupTypewriter(){
         const els = document.querySelectorAll('[data-typewrite]');
         els.forEach(el=>{
           const full = el.textContent.trim();
           const speed = parseInt(el.getAttribute('data-type-speed')||'28',10);
-          const delay = parseInt(el.getAttribute('data-type-delay')||'150',10);
+          const delay = parseInt(el.getAttribute('data-type-delay')||'120',10);
           el.textContent=''; el.classList.add('typewrite');
           const start=()=>{
             if (prefersReduced){ el.textContent=full; el.classList.add('done'); return; }
