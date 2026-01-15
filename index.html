@@ -274,147 +274,6 @@
       );
     }
 
-    // ===== Engineering notebook demos (kept, renamed) =====
-    function linspace(a, b, n) {
-      const arr = []; if (n <= 1) return [a];
-      const step = (b - a) / (n - 1);
-      for (let i = 0; i < n; i++) arr.push(a + i * step);
-      return arr;
-    }
-    function toPolyline(points, w=600, h=260, pad=10) {
-      if (!points.length) return "";
-      const xs = points.map(p=>p[0]), ys = points.map(p=>p[1]);
-      const xmin = Math.min(...xs), xmax = Math.max(...xs);
-      const ymin = Math.min(...ys), ymax = Math.max(...ys);
-      const sx = x => pad + (w-2*pad) * ((x - xmin) / (xmax - xmin || 1));
-      const sy = y => h - pad - (h-2*pad) * ((y - ymin) / (ymax - ymin || 1));
-      return points.map(([x,y]) => `${sx(x)},${sy(y)}`).join(" ");
-    }
-
-    function DepositionEtchCard() {
-      const [mode, setMode] = React.useState("dep"); // dep or etch
-      const [rate, setRate] = React.useState(50);    // nm/min
-      const [time, setTime] = React.useState(10);    // min
-      const [t0, setT0]   = React.useState(200);     // nm
-      const sign = mode === "dep" ? 1 : -1;
-      const tFinal = Math.max(0, t0 + sign * rate * time);
-      const maxScale = Math.max(t0, tFinal, 100);
-
-      return (
-        <div className="card p-6" data-reveal>
-          <div className="flex items-center justify-between gap-4 mb-4">
-            <h3 className="font-head text-2xl font-bold">Notebook: deposition & etch rate planner</h3>
-            <div className="flex gap-2">
-              <button className={cx("btn", mode==="dep" ? "border-blue-500 text-blue-700 bg-blue-50" : "")} onClick={()=>setMode("dep")}>Deposition</button>
-              <button className={cx("btn", mode==="etch" ? "border-blue-500 text-blue-700 bg-blue-50" : "")} onClick={()=>setMode("etch")}>Etch</button>
-            </div>
-          </div>
-
-          <div className="grid sm:grid-cols-3 gap-4">
-            <label className="text-sm">
-              <div className="mb-1">Initial thickness <span className="mono">t₀</span> (nm): <strong>{t0}</strong></div>
-              <input type="range" min="0" max="1000" value={t0} onChange={e=>setT0(+e.target.value)} className="w-full"/>
-            </label>
-            <label className="text-sm">
-              <div className="mb-1">Rate (nm/min): <strong>{rate}</strong></div>
-              <input type="range" min="0" max="200" value={rate} onChange={e=>setRate(+e.target.value)} className="w-full"/>
-            </label>
-            <label className="text-sm">
-              <div className="mb-1">Time (min): <strong>{time}</strong></div>
-              <input type="range" min="0" max="60" value={time} onChange={e=>setTime(+e.target.value)} className="w-full"/>
-            </label>
-          </div>
-
-          <div className="grid sm:grid-cols-2 gap-6 mt-6">
-            <div>
-              <div className="text-sm text-slate-600 mb-2">Initial stack</div>
-              <div className="h-40 w-24 border rounded-xl overflow-hidden bg-slate-100 relative">
-                <div className="absolute bottom-0 left-0 right-0 bg-blue-400" style={{ height: `${(t0 / maxScale) * 100}%` }} />
-              </div>
-              <div className="text-sm mt-2 mono">t₀ = <strong>{t0.toFixed(0)}</strong> nm</div>
-            </div>
-            <div>
-              <div className="text-sm text-slate-600 mb-2">Final stack</div>
-              <div className="h-40 w-24 border rounded-xl overflow-hidden bg-slate-100 relative">
-                <div className="absolute bottom-0 left-0 right-0 bg-blue-700" style={{ height: `${(tFinal / maxScale) * 100}%` }} />
-              </div>
-              <div className="text-sm mt-2 mono">tᶠ = <strong>{tFinal.toFixed(0)}</strong> nm</div>
-            </div>
-          </div>
-
-          <p className="text-sm text-slate-600 mt-4 leading-7">
-            Simple planning tool for thin‑film steps: <span className="mono">tᶠ = max(0, t₀ ± rate × time)</span>. Useful for keeping process runs consistent across wafer iterations.
-          </p>
-        </div>
-      );
-    }
-
-    // Thin-film reflectance (single film on glass, normal incidence)
-    function filmReflectanceSpectrum(n1=1.45, n2=1.5, d_nm=300) {
-      const n0 = 1.0;
-      const lambdas = linspace(380, 780, 200);
-      const r01 = (n0 - n1) / (n0 + n1);
-      const r12 = (n1 - n2) / (n1 + n2);
-      return lambdas.map(lambda => {
-        const beta = 2 * Math.PI * n1 * (d_nm / lambda);
-        const cos2b = Math.cos(2*beta), sin2b = Math.sin(2*beta);
-        const num_re = r01 + r12 * cos2b;
-        const num_im = r12 * sin2b;
-        const rr = r01 * r12;
-        const den_re = 1 + rr * cos2b;
-        const den_im = rr * sin2b;
-        const den2 = den_re*den_re + den_im*den_im;
-        const re = (num_re*den_re + num_im*den_im) / den2;
-        const im = (num_im*den_re - num_re*den_im) / den2;
-        const R = re*re + im*im;
-        return [lambda, R];
-      });
-    }
-
-    function ThinFilmCard() {
-      const [n1, setN1] = React.useState(1.45);
-      const [n2, setN2] = React.useState(1.50);
-      const [d,  setD ] = React.useState(300);
-      const data = filmReflectanceSpectrum(n1, n2, d);
-      const poly = toPolyline(data, 600, 260, 36);
-
-      return (
-        <div className="card p-6" data-reveal>
-          <h3 className="font-head text-2xl font-bold mb-4">Notebook: thin‑film interference (reflectance vs wavelength)</h3>
-
-          <div className="grid sm:grid-cols-3 gap-4 mb-4">
-            <label className="text-sm">
-              <div className="mb-1">Film index <span className="mono">n₁</span>: <strong>{n1.toFixed(2)}</strong></div>
-              <input type="range" min="1.00" max="2.50" step="0.01" value={n1} onChange={e=>setN1(+e.target.value)} className="w-full"/>
-            </label>
-            <label className="text-sm">
-              <div className="mb-1">Substrate <span className="mono">n₂</span>: <strong>{n2.toFixed(2)}</strong></div>
-              <input type="range" min="1.30" max="2.00" step="0.01" value={n2} onChange={e=>setN2(+e.target.value)} className="w-full"/>
-            </label>
-            <label className="text-sm">
-              <div className="mb-1">Thickness <span className="mono">d</span> (nm): <strong>{d}</strong></div>
-              <input type="range" min="0" max="1000" step="1" value={d} onChange={e=>setD(+e.target.value)} className="w-full"/>
-            </label>
-          </div>
-
-          <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
-            <svg width="100%" height="280" viewBox="0 0 600 260" preserveAspectRatio="none">
-              <rect x="0" y="0" width="600" height="260" fill="white"/>
-              <line x1="36" y1="224" x2="580" y2="224" stroke="#cbd5e1"/>
-              <line x1="36" y1="24"  x2="36"  y2="224" stroke="#cbd5e1"/>
-              <text x="300" y="248" fontSize="10" fill="#64748b" textAnchor="middle">Wavelength (nm)</text>
-              <text x="10" y="18" transform="rotate(-90,10,18)" fontSize="10" fill="#64748b">Reflectance</text>
-              <polyline fill="none" stroke="#2563eb" strokeWidth="2" points={poly}/>
-            </svg>
-          </div>
-
-          <p className="text-sm text-slate-600 mt-3 leading-7">
-            A compact model for thin‑film stacks to support coating decisions (e.g., spectral tuning and optical visibility control). Normal incidence, single‑film approximation.
-          </p>
-        </div>
-      );
-    }
-
     // ===== Content =====
     const PROJECTS = [
       {
@@ -500,8 +359,6 @@
                 </div>
               </div>
             </div>
-
-            
           </div>
         )
       },
@@ -526,7 +383,7 @@
                   <img src={IMG_IR} alt="Thermal imaging" className="w-full h-full object-cover" />
                 </div>
                 <figcaption className="p-5 text-sm text-slate-700 leading-7">
-                  Representative thermal imaging from opto‑thermal experiments and device evaluation.
+                  Thermal imaging from opto‑thermal experiments and device evaluation.
                 </figcaption>
               </figure>
 
@@ -582,7 +439,7 @@
                   <img src={IMG_CLEANROOM} alt="Cleanroom fabrication" className="w-full h-full object-cover" style={{objectPosition:"55% 55%"}} />
                 </div>
                 <figcaption className="p-5 text-sm text-slate-700 leading-7">
-                  Cleanroom fabrication environment (representative).
+                  Cleanroom fabrication during my nanofab work.
                 </figcaption>
               </figure>
               <figure className="card overflow-hidden">
@@ -643,7 +500,7 @@
                   <img src={IMG_QNC_VIALS} alt="Quantum dots vial photo" className="w-full h-full object-cover" />
                 </div>
                 <figcaption className="p-5 text-sm text-slate-700 leading-7">
-                  Quantum dots (representative visual used for QDLED work).
+                  Quantum dots used for QDLED fabrication.
                 </figcaption>
               </figure>
 
@@ -796,9 +653,12 @@
       {
         title: "Electronics & controls",
         items: [
-          "MOSFET device fundamentals; basic device characterization workflows",
+          "MOSFET device fundamentals; device I‑V sweeps; parameter extraction",
           "<strong>SPICE</strong> circuit simulation (MOSFET circuits, RC/RLC, amplifiers, biasing)",
-          "Sensor integration + <strong>PID</strong> control (temperature regulation)"
+          "Hands‑on circuit build + debugging (breadboards, wiring, connectors; multimeter/oscilloscope‑based troubleshooting)",
+          "Sensors + control: <strong>PID</strong> temperature regulation using sensor feedback; basic embedded control loops",
+          "Power + signal integrity basics (grounding, shielding, noise awareness; measurement hygiene)",
+          "Lab instrumentation: function generator / power supply / oscilloscope workflows for characterization"
         ]
       },
       {
@@ -850,9 +710,8 @@
                   ["#outputs","Outputs"],
                   ["#toolbox","Toolbox"],
                   ["#timeline","Timeline"],
-                  ["#notebooks","Engineering notebooks"],
                   ["#contact","Contact"],
-                ].map(([href, label])=>(
+                ].map(([href, label])=> (
                   <a key={href} href={href} className="btn text-slate-800">{label}</a>
                 ))}
               </nav>
@@ -868,7 +727,7 @@
                     Photonics · Semiconductors · Smart materials
                   </h1>
                   <div className="font-head text-sm uppercase tracking-[0.18em] text-slate-500 font-semibold">Summary</div>
-<p className="text-slate-700 text-[1.05rem] leading-8">
+                  <p className="text-slate-700 text-[1.05rem] leading-8">
                     Nanotechnology Engineering specializing in <strong>photonics/displays</strong>, <strong>semiconductor/electronic devices</strong>, and <strong>biomedical technologies</strong>.
                     <span className="block mt-2">
                       <strong>Inventor</strong> on a display‑photonics patent application (in preparation);
@@ -899,15 +758,6 @@
                       <div className="mt-2"><strong>$4,000</strong> scholarship</div>
                     </div>
                   </div>
-                </div>
-
-                <div className="card p-6" data-reveal>
-                  <div className="text-sm text-slate-500">At a glance</div>
-                  <ul className="mt-3 space-y-2 text-slate-800 leading-7">
-                    <li><strong>Wafer‑scale nanofab</strong> + metrology (KLayout, lithography/etch/deposition, profilometry/ellipsometry)</li>
-                    <li><strong>Opto‑thermal devices</strong> (smart liquid windows; radiative control; modeling + experiments)</li>
-                    <li><strong>Electrical fundamentals</strong> (MOSFETs, SPICE, sensor/PID control)</li>
-                  </ul>
                 </div>
               </div>
 
@@ -985,17 +835,6 @@
                   </div>
                 ))}
               </div>
-            </div>
-          </Section>
-
-          {/* Engineering notebooks */}
-          <Section id="notebooks" title="Engineering notebooks" className="py-12">
-            <div className="text-slate-700 leading-8 mb-6" data-reveal>
-              Compact interactive demos that mirror the kind of calculations used when planning fabrication and optical experiments.
-            </div>
-            <div className="grid lg:grid-cols-2 gap-8">
-              <DepositionEtchCard />
-              <ThinFilmCard />
             </div>
           </Section>
 
